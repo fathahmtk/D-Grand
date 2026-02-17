@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag } from 'lucide-react';
+import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag, Heart } from 'lucide-react';
 import { Logo } from './Logo';
 import { NAV_ITEMS, WHATSAPP_LINK, PRODUCTS } from '../constants';
 import { Product } from '../types';
@@ -22,7 +22,8 @@ export const Layout: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   
-  const { toggleCart, cartCount, notification } = useShop();
+  const { toggleCart, cartCount, notification, wishlist } = useShop();
+  const wishlistCount = wishlist.length;
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -143,6 +144,20 @@ export const Layout: React.FC = () => {
                     <Search size={20} />
                 </button>
 
+                {/* Wishlist Icon Desktop */}
+                <Link 
+                    to="/wishlist"
+                    className="text-white hover:text-gold-400 transition-colors relative group"
+                    aria-label="Open Wishlist"
+                >
+                    <Heart size={20} />
+                    {wishlistCount > 0 && (
+                        <span className="absolute -top-2 -right-2 w-4 h-4 bg-gold-500 text-emerald-950 text-[9px] font-bold flex items-center justify-center rounded-full animate-fade-in-up">
+                            {wishlistCount}
+                        </span>
+                    )}
+                </Link>
+
                 {/* Cart Icon Desktop */}
                 <button 
                     onClick={toggleCart}
@@ -168,6 +183,18 @@ export const Layout: React.FC = () => {
                 <Search size={22} />
             </button>
             
+             <Link 
+                to="/wishlist"
+                className="text-gold-400 hover:text-white transition-colors relative"
+            >
+                <Heart size={22} />
+                {wishlistCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-white text-emerald-950 text-[9px] font-bold flex items-center justify-center rounded-full">
+                        {wishlistCount}
+                    </span>
+                )}
+            </Link>
+
             <button 
                 onClick={toggleCart}
                 className="text-gold-400 hover:text-white transition-colors relative"
@@ -300,6 +327,9 @@ export const Layout: React.FC = () => {
           <div className="w-12 h-[1px] bg-white/10 mx-auto my-4"></div>
           <Link to="/marketplaces" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">
             Marketplaces
+          </Link>
+          <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">
+            Wishlist ({wishlistCount})
           </Link>
         </nav>
       </div>

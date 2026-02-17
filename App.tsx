@@ -11,6 +11,7 @@ import Contact from './pages/Contact';
 import ProductDetail from './pages/ProductDetail';
 import Journal from './pages/Journal';
 import JournalPost from './pages/JournalPost';
+import Wishlist from './pages/Wishlist';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -37,6 +38,7 @@ const App: React.FC = () => {
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
             <Route path="product/:id" element={<ProductDetail />} />
+            <Route path="wishlist" element={<Wishlist />} />
           </Route>
         </Routes>
       </HashRouter>
