@@ -8,7 +8,6 @@ import { NAV_ITEMS, WHATSAPP_LINK } from '../constants';
 const HEADER_NAV_ITEMS = [
   { label: 'Home', path: '/' },
   { label: 'Collections', path: '/collections' },
-  { label: 'Categories', path: '/collections' }, // Pointing to collections as per standard implementation
   { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
 ];
