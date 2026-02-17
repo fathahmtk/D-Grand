@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Section } from '../components/Section';
 import { ProductCard } from '../components/ProductCard';
-import { PRODUCTS, CATEGORIES } from '../constants';
+import { PRODUCTS, CATEGORIES, COLLECTION_HEADERS, CATEGORY_IMAGES } from '../constants';
 import { SlidersHorizontal, ChevronDown, Check, ArrowUpDown } from 'lucide-react';
 
 type SortOption = 'featured' | 'price-low' | 'price-high' | 'newest';
@@ -47,82 +47,98 @@ const Collections: React.FC = () => {
     { label: 'Newest Arrivals', value: 'newest' },
   ];
 
+  const currentHeaderImage = COLLECTION_HEADERS[activeCategory] || COLLECTION_HEADERS['All'];
+
   return (
     <div className="min-h-screen bg-cream-50">
-      {/* Condensed Hero Section */}
-      <div className="bg-emerald-950 text-white pt-32 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
-        <div className="relative z-10 container mx-auto px-6 text-center">
-          <h1 className="font-serif text-4xl md:text-5xl mb-3 text-white">
-            Our Collections
-          </h1>
-          <p className="text-emerald-100/60 text-xs font-light uppercase tracking-[0.2em]">
-            Timeless Elegance | Handcrafted Perfection
-          </p>
-        </div>
+      {/* Dynamic Hero Section */}
+      <div className="relative h-[40vh] md:h-[50vh] overflow-hidden bg-emerald-950">
+         <img 
+            src={currentHeaderImage} 
+            alt={activeCategory} 
+            className="w-full h-full object-cover opacity-60 transition-opacity duration-700"
+         />
+         <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/90 to-transparent"></div>
+         <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 text-center">
+             <span className="text-gold-400 text-[10px] uppercase tracking-[0.3em] font-bold mb-4 block animate-fade-in-up">
+                D GRAND Collections
+             </span>
+             <h1 className="font-serif text-5xl md:text-7xl text-white mb-2 animate-fade-in-up delay-100">
+                {activeCategory === 'All' ? 'All Jewellery' : activeCategory}
+             </h1>
+         </div>
       </div>
 
-      {/* Sticky Toolbar */}
-      <div className="sticky top-[60px] md:top-[72px] z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
+      {/* Visual Category Filter (Rail) */}
+      <div className="bg-white border-b border-gray-100 py-8 overflow-x-auto scrollbar-hide">
+         <div className="container mx-auto px-4">
+             <div className="flex justify-center gap-6 md:gap-12 min-w-max">
+                 <button 
+                    onClick={() => setActiveCategory('All')}
+                    className="group flex flex-col items-center gap-3 focus:outline-none"
+                 >
+                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 transition-all duration-300 p-0.5 ${activeCategory === 'All' ? 'border-gold-500 scale-110' : 'border-transparent group-hover:border-gold-200'}`}>
+                        <div className="w-full h-full rounded-full bg-emerald-950 flex items-center justify-center text-white text-[10px] font-bold uppercase tracking-widest">
+                           All
+                        </div>
+                    </div>
+                    <span className={`text-[10px] uppercase tracking-widest font-bold transition-colors ${activeCategory === 'All' ? 'text-emerald-950' : 'text-gray-400 group-hover:text-emerald-950'}`}>View All</span>
+                 </button>
+
+                 {CATEGORY_IMAGES.map((cat, idx) => (
+                     <button 
+                        key={idx}
+                        onClick={() => setActiveCategory(cat.name)}
+                        className="group flex flex-col items-center gap-3 focus:outline-none"
+                     >
+                        <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 transition-all duration-300 p-0.5 ${activeCategory === cat.name ? 'border-gold-500 scale-110' : 'border-transparent group-hover:border-gold-200'}`}>
+                            <img src={cat.img} alt={cat.name} className="w-full h-full object-cover rounded-full" />
+                        </div>
+                        <span className={`text-[10px] uppercase tracking-widest font-bold transition-colors ${activeCategory === cat.name ? 'text-emerald-950' : 'text-gray-400 group-hover:text-emerald-950'}`}>{cat.name}</span>
+                     </button>
+                 ))}
+             </div>
+         </div>
+      </div>
+
+      {/* Toolbar */}
+      <div className="sticky top-[60px] md:top-[72px] z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
          <div className="container mx-auto px-4 md:px-6">
-            <div className="flex flex-col md:flex-row items-center justify-between py-4 gap-4">
-                
-                {/* Category Filter (Horizontal Scroll) */}
-                <div className="w-full md:w-auto overflow-x-auto scrollbar-hide pb-2 md:pb-0">
-                    <div className="flex items-center gap-2">
-                        {['All', ...CATEGORIES].map(cat => (
-                            <button
-                                key={cat}
-                                onClick={() => setActiveCategory(cat)}
-                                className={`whitespace-nowrap px-5 py-2 text-[10px] uppercase tracking-widest rounded-full transition-all duration-300 border ${
-                                    activeCategory === cat 
-                                    ? 'bg-emerald-950 text-white border-emerald-950' 
-                                    : 'bg-transparent text-gray-500 border-gray-200 hover:border-gold-500 hover:text-emerald-950'
-                                }`}
-                            >
-                                {cat}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+            <div className="flex items-center justify-between py-4">
+                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                    Showing {filteredAndSortedProducts.length} Results
+                </span>
 
-                {/* Sort Dropdown */}
-                <div className="w-full md:w-auto flex items-center justify-between md:justify-end gap-4 border-t md:border-t-0 border-gray-100 pt-3 md:pt-0">
-                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-                        {filteredAndSortedProducts.length} Products
-                    </span>
-
-                    <div className="relative">
-                        <button 
-                            onClick={() => setIsSortOpen(!isSortOpen)}
-                            className="flex items-center gap-2 text-xs font-bold text-emerald-950 uppercase tracking-wider hover:text-gold-600 transition-colors"
-                        >
-                            <ArrowUpDown size={14} />
-                            <span>Sort</span>
-                            <ChevronDown size={14} className={`transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''}`} />
-                        </button>
-                        
-                        {/* Dropdown Menu */}
-                        {isSortOpen && (
-                            <>
-                                <div className="fixed inset-0 z-10" onClick={() => setIsSortOpen(false)}></div>
-                                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-sm shadow-xl border border-gray-100 z-20 animate-fade-in-up origin-top-right">
-                                    {sortOptions.map((option) => (
-                                        <button
-                                            key={option.value}
-                                            onClick={() => { setSortBy(option.value); setIsSortOpen(false); }}
-                                            className={`w-full text-left px-4 py-3 text-xs flex items-center justify-between hover:bg-cream-50 transition-colors ${
-                                                sortBy === option.value ? 'text-gold-600 font-bold' : 'text-gray-600'
-                                            }`}
-                                        >
-                                            {option.label}
-                                            {sortBy === option.value && <Check size={12} />}
-                                        </button>
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                    </div>
+                <div className="relative">
+                    <button 
+                        onClick={() => setIsSortOpen(!isSortOpen)}
+                        className="flex items-center gap-2 text-xs font-bold text-emerald-950 uppercase tracking-wider hover:text-gold-600 transition-colors"
+                    >
+                        <ArrowUpDown size={14} />
+                        <span>Sort</span>
+                        <ChevronDown size={14} className={`transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {/* Dropdown Menu */}
+                    {isSortOpen && (
+                        <>
+                            <div className="fixed inset-0 z-10" onClick={() => setIsSortOpen(false)}></div>
+                            <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-sm shadow-xl border border-gray-100 z-20 animate-fade-in-up origin-top-right">
+                                {sortOptions.map((option) => (
+                                    <button
+                                        key={option.value}
+                                        onClick={() => { setSortBy(option.value); setIsSortOpen(false); }}
+                                        className={`w-full text-left px-4 py-3 text-xs flex items-center justify-between hover:bg-cream-50 transition-colors ${
+                                            sortBy === option.value ? 'text-gold-600 font-bold' : 'text-gray-600'
+                                        }`}
+                                    >
+                                        {option.label}
+                                        {sortBy === option.value && <Check size={12} />}
+                                    </button>
+                                ))}
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
          </div>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { ProductCarousel } from '../components/ProductCarousel';
 import { Testimonials } from '../components/Testimonials';
-import { PRODUCTS, BLOG_POSTS, INSTAGRAM_IMAGES, TESTIMONIALS, CATEGORY_IMAGES, HERO_SLIDES, FALLBACK_IMAGE, WHATSAPP_LINK } from '../constants';
-import { ArrowRight, Gem, ShieldCheck, ChevronRight, MessageCircle } from 'lucide-react';
+import { HeroSlider } from '../components/HeroSlider';
+import { PRODUCTS, BLOG_POSTS, INSTAGRAM_IMAGES, TESTIMONIALS, CATEGORY_IMAGES, FALLBACK_IMAGE, OCCASIONS } from '../constants';
+import { ArrowRight, Gem, ShieldCheck, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Simple Icon component for the Insta section
@@ -23,62 +24,8 @@ const Home: React.FC = () => {
   return (
     <div className="overflow-hidden">
       
-      {/* 1. HERO SECTION - Updated per request */}
-      <section className="relative h-screen min-h-[700px] w-full overflow-hidden bg-emerald-950 flex items-center justify-center md:justify-start">
-        
-        {/* Background Image - Full width/height cover */}
-        <div className="absolute inset-0 w-full h-full">
-            <img 
-                src={HERO_SLIDES[0].image} 
-                alt="D GRAND Jewellery Hero" 
-                className="w-full h-full object-cover" 
-                onError={handleImageError}
-            />
-        </div>
-        
-        {/* Dark Emerald Overlay - Enhanced for text visibility */}
-        <div className="absolute inset-0 bg-emerald-950/80 mix-blend-multiply"></div>
-        {/* Gradient for extra contrast on the left side */}
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950 via-emerald-950/60 to-transparent"></div>
-        
-        {/* Soft Gold Spotlight Effect */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-400/10 blur-[120px] rounded-full mix-blend-overlay pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
-
-        {/* Content Container - Vertically Centered */}
-        <div className="relative z-10 w-full px-6 md:px-24">
-            <div className="max-w-4xl text-left animate-fade-in-up">
-              
-              {/* Subtext */}
-              <div className="flex items-center gap-4 mb-6">
-                 <div className="h-[2px] w-12 bg-gold-500"></div>
-                 <h2 className="text-gold-300 text-[10px] md:text-sm font-bold uppercase tracking-[0.3em] font-sans">
-                    Premium Designs | Wholesale & Retail | Bangalore
-                 </h2>
-              </div>
-
-              {/* Main Heading */}
-              <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-8 text-white drop-shadow-lg">
-                <span className="block">Timeless Imitation</span>
-                <span className="block text-gold-200 italic font-light">
-                    Jewellery Collection
-                </span>
-              </h1>
-              
-              {/* Buttons */}
-              <div className="flex flex-wrap gap-6 mt-10 opacity-0 animate-[fadeInUp_1.2s_cubic-bezier(0.16,1,0.3,1)_0.2s_forwards]">
-                  <Link to="/collections" className="group relative px-10 py-5 bg-transparent border border-gold-400 text-gold-100 text-xs font-bold uppercase tracking-[0.25em] hover:bg-gold-500 hover:text-emerald-950 hover:border-gold-500 transition-all duration-500 overflow-hidden">
-                    <span className="relative z-10">View Collections</span>
-                    <div className="absolute inset-0 bg-gold-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                  </Link>
-                  <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="flex items-center gap-3 px-6 py-5 text-white/90 text-xs font-bold uppercase tracking-[0.25em] hover:text-gold-400 transition-colors group">
-                    <MessageCircle size={18} className="text-gold-400" />
-                    <span>Enquire on WhatsApp</span>
-                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
-                  </a>
-              </div>
-            </div>
-        </div>
-      </section>
+      {/* 1. HERO SLIDER */}
+      <HeroSlider />
 
       {/* 2. EDITORIAL CATEGORIES */}
       <section className="bg-cream-50 py-24 md:py-32">
@@ -125,8 +72,35 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. SHOP THE LOOK - New Feature */}
-      <section className="bg-white py-32 border-t border-cream-200 overflow-hidden">
+      {/* 3. SHOP BY OCCASION */}
+      <section className="bg-white py-24">
+         <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+               <span className="text-gold-600 text-[10px] uppercase tracking-[0.25em] font-bold">Curated Edits</span>
+               <h2 className="font-serif text-4xl text-emerald-950 mt-3">Shop By Occasion</h2>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+               {OCCASIONS.map((occasion) => (
+                  <Link to="/collections" key={occasion.id} className="group cursor-pointer">
+                     <div className="aspect-[3/4] overflow-hidden rounded-full border border-transparent group-hover:border-gold-500/30 transition-all duration-500 relative mb-4">
+                        <img 
+                           src={occasion.image} 
+                           alt={occasion.name} 
+                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                           onError={handleImageError}
+                        />
+                        <div className="absolute inset-0 bg-emerald-950/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                     </div>
+                     <h3 className="text-center font-serif text-xl text-emerald-950 group-hover:text-gold-600 transition-colors">{occasion.name}</h3>
+                  </Link>
+               ))}
+            </div>
+         </div>
+      </section>
+
+      {/* 4. SHOP THE LOOK - New Feature */}
+      <section className="bg-cream-50 py-32 border-t border-cream-200 overflow-hidden">
          <div className="container mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                <div className="relative order-2 lg:order-1">
@@ -181,7 +155,7 @@ const Home: React.FC = () => {
          </div>
       </section>
 
-      {/* 4. CURATED SELECTION - Carousel */}
+      {/* 5. CURATED SELECTION - Carousel */}
       <section className="bg-emerald-950 py-32 relative">
          <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
          <div className="container mx-auto px-6 relative z-10">
@@ -196,26 +170,26 @@ const Home: React.FC = () => {
          </div>
       </section>
 
-      {/* 5. QUALITY PROMISE */}
-      <section className="bg-cream-50 py-24 border-b border-cream-200">
+      {/* 6. QUALITY PROMISE */}
+      <section className="bg-white py-24 border-b border-cream-200">
           <div className="container mx-auto px-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-gray-200/50">
                   <div className="px-4 py-4">
-                      <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-gold-500 mb-6 shadow-sm">
+                      <div className="w-16 h-16 mx-auto bg-cream-50 rounded-full flex items-center justify-center text-gold-500 mb-6 shadow-sm">
                           <Gem size={24} strokeWidth={1} />
                       </div>
                       <h4 className="font-serif text-xl text-emerald-950 mb-3">Premium Quality</h4>
                       <p className="text-gray-500 text-sm font-light leading-relaxed">Crafted with high-grade materials that mimic the brilliance of real gold and diamonds.</p>
                   </div>
                   <div className="px-4 py-4">
-                      <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-gold-500 mb-6 shadow-sm">
+                      <div className="w-16 h-16 mx-auto bg-cream-50 rounded-full flex items-center justify-center text-gold-500 mb-6 shadow-sm">
                           <ShieldCheck size={24} strokeWidth={1} />
                       </div>
                       <h4 className="font-serif text-xl text-emerald-950 mb-3">Skin Friendly</h4>
                       <p className="text-gray-500 text-sm font-light leading-relaxed">Nickel-free and lead-free plating ensures comfort for sensitive skin types.</p>
                   </div>
                   <div className="px-4 py-4">
-                      <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center text-gold-500 mb-6 shadow-sm">
+                      <div className="w-16 h-16 mx-auto bg-cream-50 rounded-full flex items-center justify-center text-gold-500 mb-6 shadow-sm">
                           <Gem size={24} strokeWidth={1} /> 
                       </div>
                       <h4 className="font-serif text-xl text-emerald-950 mb-3">Artisan Crafted</h4>
@@ -225,8 +199,8 @@ const Home: React.FC = () => {
           </div>
       </section>
 
-      {/* 6. WHOLESALE BANNER */}
-      <section className="py-32 bg-white">
+      {/* 7. WHOLESALE BANNER */}
+      <section className="py-32 bg-cream-50">
          <div className="container mx-auto px-6">
             <div className="relative bg-emerald-900 rounded-sm overflow-hidden shadow-2xl">
                <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -256,8 +230,8 @@ const Home: React.FC = () => {
          </div>
       </section>
 
-      {/* 7. TESTIMONIALS */}
-      <section className="bg-cream-50 py-24 border-t border-cream-100">
+      {/* 8. TESTIMONIALS */}
+      <section className="bg-white py-24 border-t border-cream-100">
         <div className="container mx-auto px-6">
            <div className="text-center mb-16">
               <span className="text-gold-600 text-[10px] uppercase tracking-[0.25em] font-bold">Testimonials</span>
@@ -268,8 +242,8 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 8. JOURNAL */}
-      <section className="py-24 bg-white border-t border-cream-200">
+      {/* 9. JOURNAL */}
+      <section className="py-24 bg-cream-50 border-t border-cream-200">
          <div className="container mx-auto px-6">
             <div className="flex justify-between items-end mb-16">
                <Link to="/journal" className="group">
@@ -298,8 +272,8 @@ const Home: React.FC = () => {
          </div>
       </section>
 
-      {/* 9. INSTAGRAM */}
-      <section className="bg-cream-50 py-20 border-t border-cream-200">
+      {/* 10. INSTAGRAM */}
+      <section className="bg-white py-20 border-t border-cream-200">
          <div className="container mx-auto px-6">
             <div className="text-center mb-12">
                <h2 className="font-serif text-2xl text-emerald-950">@dgrandjewellery</h2>

@@ -58,11 +58,27 @@ export const CATEGORIES = [
 ];
 
 export const CATEGORY_IMAGES = [
-  { name: 'Necklaces', img: 'https://images.unsplash.com/photo-1599643478518-17488fbbcd75?q=80&w=800&auto=format&fit=crop' },
+  { name: 'Necklaces', img: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=800&auto=format&fit=crop' },
   { name: 'Earrings', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop' },
   { name: 'Bangles', img: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop' },
   { name: 'Bridal Sets', img: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop' },
   { name: 'Temple Jewellery', img: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=800&auto=format&fit=crop' }
+];
+
+export const COLLECTION_HEADERS: Record<string, string> = {
+  'All': 'https://images.unsplash.com/photo-1576906231649-14a5840d4f47?q=80&w=1920&auto=format&fit=crop', // Workshop/General
+  'Necklaces': 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1920&auto=format&fit=crop',
+  'Earrings': 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1920&auto=format&fit=crop',
+  'Bridal Sets': 'https://images.unsplash.com/photo-1602751584552-8ba420552259?q=80&w=1920&auto=format&fit=crop',
+  'Bangles': 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1920&auto=format&fit=crop',
+  'Temple Jewellery': 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=1920&auto=format&fit=crop'
+};
+
+export const OCCASIONS = [
+  { id: 'wedding', name: 'Wedding Vows', image: 'https://images.unsplash.com/photo-1583934555026-6f85ed31a470?q=80&w=800&auto=format&fit=crop' },
+  { id: 'party', name: 'Cocktail Party', image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop' },
+  { id: 'work', name: 'Office Elegance', image: 'https://images.unsplash.com/photo-1630568116558-8ba948ef53ac?q=80&w=800&auto=format&fit=crop' },
+  { id: 'gift', name: 'Perfect Gifts', image: 'https://images.unsplash.com/photo-1617038224531-ab5d78665b1a?q=80&w=800&auto=format&fit=crop' }
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
