@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { ShopProvider } from './context/ShopContext';
 import { Layout } from './components/Layout';
 import Home from './pages/Home';
 import Collections from './pages/Collections';
@@ -8,6 +9,8 @@ import Marketplaces from './pages/Marketplaces';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import ProductDetail from './pages/ProductDetail';
+import Journal from './pages/Journal';
+import JournalPost from './pages/JournalPost';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -20,20 +23,24 @@ const ScrollToTop = () => {
 
 const App: React.FC = () => {
   return (
-    <HashRouter>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="collections" element={<Collections />} />
-          <Route path="wholesale" element={<Wholesale />} />
-          <Route path="marketplaces" element={<Marketplaces />} />
-          <Route path="about" element={<About />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="product/:id" element={<ProductDetail />} />
-        </Route>
-      </Routes>
-    </HashRouter>
+    <ShopProvider>
+      <HashRouter>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="collections" element={<Collections />} />
+            <Route path="wholesale" element={<Wholesale />} />
+            <Route path="marketplaces" element={<Marketplaces />} />
+            <Route path="journal" element={<Journal />} />
+            <Route path="journal/:id" element={<JournalPost />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="product/:id" element={<ProductDetail />} />
+          </Route>
+        </Routes>
+      </HashRouter>
+    </ShopProvider>
   );
 };
 

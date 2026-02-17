@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Section } from '../components/Section';
 import { WholesaleForm } from '../types';
 import { PHONE_PRIMARY, FALLBACK_IMAGE } from '../constants';
-import { Send, CheckCircle, TrendingUp, Package, Shield } from 'lucide-react';
+import { Send, CheckCircle, TrendingUp, Package, Shield, UserCheck, FileText, Truck, Plus, Minus } from 'lucide-react';
 
 const Wholesale: React.FC = () => {
   const [formData, setFormData] = useState<WholesaleForm>({
@@ -12,6 +12,8 @@ const Wholesale: React.FC = () => {
     city: '',
     requirement: ''
   });
+
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,6 +42,20 @@ const Wholesale: React.FC = () => {
     </div>
   );
 
+  const PROCESS_STEPS = [
+      { icon: <UserCheck size={28} />, title: "Register", desc: "Submit the form below with your business details." },
+      { icon: <FileText size={28} />, title: "Verification", desc: "Our team validates your business profile within 24h." },
+      { icon: <Package size={28} />, title: "Select", desc: "Access our full wholesale catalog & place your order." },
+      { icon: <Truck size={28} />, title: "Ship", desc: "Secure packaging & dispatch within 2-3 business days." }
+  ];
+
+  const WHOLESALE_FAQS = [
+      { q: "What is the Minimum Order Value (MOV)?", a: "To qualify for wholesale pricing, the minimum order value is ₹10,000 for the first order. Subsequent orders have a flexible minimum of ₹5,000." },
+      { q: "Do you provide product images for reselling?", a: "Yes, once you become a verified partner, we provide high-resolution, watermark-free images that you can use on your social media or website." },
+      { q: "Can I customize the jewellery?", a: "Customization is available for bulk orders of a single design (MOQ 10+ pieces per design). Production time varies from 15-20 days." },
+      { q: "What are the shipping charges for bulk orders?", a: "Shipping is calculated based on actual weight. We have tie-ups with major logistics partners to ensure the lowest shipping rates for you." }
+  ];
+
   return (
     <>
        <div className="bg-emerald-950 text-white pt-32 pb-20 text-center relative overflow-hidden">
@@ -55,7 +71,31 @@ const Wholesale: React.FC = () => {
         </div>
       </div>
 
-      <Section background="white" className="relative">
+      {/* Process Section */}
+      <Section background="cream">
+          <div className="container mx-auto px-6">
+              <div className="text-center mb-16">
+                  <span className="text-gold-600 text-[10px] uppercase tracking-[0.25em] font-bold">How It Works</span>
+                  <h2 className="font-serif text-3xl text-emerald-950 mt-3">Simple 4-Step Process</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                  {/* Connector Line (Desktop) */}
+                  <div className="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-emerald-950/20 z-0"></div>
+
+                  {PROCESS_STEPS.map((step, idx) => (
+                      <div key={idx} className="relative z-10 flex flex-col items-center text-center group">
+                          <div className="w-24 h-24 bg-white border border-gray-100 rounded-full flex items-center justify-center text-emerald-950 mb-6 shadow-sm group-hover:border-gold-500 group-hover:text-gold-600 transition-all duration-300">
+                              {step.icon}
+                          </div>
+                          <h4 className="font-serif text-xl text-emerald-950 mb-3">{step.title}</h4>
+                          <p className="text-gray-500 text-xs font-light px-4 leading-relaxed">{step.desc}</p>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </Section>
+
+      <Section background="white" className="relative pt-0">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] rounded-sm overflow-hidden bg-white">
             
@@ -153,6 +193,45 @@ const Wholesale: React.FC = () => {
 
           </div>
         </div>
+      </Section>
+
+      {/* Wholesale FAQ */}
+      <Section background="cream">
+         <div className="max-w-3xl mx-auto">
+             <div className="text-center mb-12">
+                 <h2 className="font-serif text-3xl text-emerald-950 mt-3">Business FAQ</h2>
+             </div>
+             
+             <div className="space-y-4">
+                 {WHOLESALE_FAQS.map((faq, idx) => (
+                     <div 
+                        key={idx} 
+                        className={`bg-white rounded-sm border transition-all duration-300 overflow-hidden ${
+                            openFaqIndex === idx ? 'border-gold-500/50 shadow-md' : 'border-gray-100 hover:border-gold-200'
+                        }`}
+                     >
+                         <button 
+                            onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
+                            className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                         >
+                             <span className={`font-serif text-lg ${openFaqIndex === idx ? 'text-emerald-950' : 'text-gray-600'}`}>
+                                 {faq.q}
+                             </span>
+                             <div className={`p-2 rounded-full transition-colors ${openFaqIndex === idx ? 'bg-gold-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                 {openFaqIndex === idx ? <Minus size={14} /> : <Plus size={14} />}
+                             </div>
+                         </button>
+                         <div 
+                            className={`px-6 text-sm text-gray-500 font-light leading-relaxed transition-all duration-300 ease-in-out ${
+                                openFaqIndex === idx ? 'max-h-40 pb-6 opacity-100' : 'max-h-0 opacity-0'
+                            }`}
+                         >
+                             {faq.a}
+                         </div>
+                     </div>
+                 ))}
+             </div>
+         </div>
       </Section>
     </>
   );

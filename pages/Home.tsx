@@ -272,13 +272,15 @@ const Home: React.FC = () => {
       <section className="py-24 bg-white border-t border-cream-200">
          <div className="container mx-auto px-6">
             <div className="flex justify-between items-end mb-16">
-               <h2 className="font-serif text-3xl md:text-4xl text-emerald-950">The Journal</h2>
+               <Link to="/journal" className="group">
+                  <h2 className="font-serif text-3xl md:text-4xl text-emerald-950 group-hover:text-gold-600 transition-colors">The Journal</h2>
+               </Link>
                <div className="hidden md:block w-32 h-px bg-emerald-950/10"></div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
                {BLOG_POSTS.map(post => (
-                  <div key={post.id} className="group cursor-pointer">
+                  <Link to={`/journal/${post.id}`} key={post.id} className="group cursor-pointer">
                      <div className="overflow-hidden aspect-[4/3] mb-6 rounded-sm">
                         <img 
                             src={post.image} 
@@ -290,7 +292,7 @@ const Home: React.FC = () => {
                      <p className="text-[10px] uppercase tracking-[0.2em] text-gold-600 mb-2">{post.category}</p>
                      <h3 className="font-serif text-xl text-emerald-950 mb-3 group-hover:text-gold-600 transition-colors">{post.title}</h3>
                      <p className="text-gray-400 text-xs leading-relaxed line-clamp-2">{post.excerpt}</p>
-                  </div>
+                  </Link>
                ))}
             </div>
          </div>

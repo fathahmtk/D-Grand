@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Product } from '../types';
-import { ShoppingBag, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { ShoppingBag, ArrowRight, ChevronDown, ChevronUp, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FALLBACK_IMAGE } from '../constants';
+import { useShop } from '../context/ShopContext';
 
 interface ProductCardProps {
   product: Product;
@@ -12,6 +13,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState(product.image);
   const [hasError, setHasError] = useState(false);
+  
+  const { addToCart, toggleWishlist, wishlist } = useShop();
+  const isWishlisted = wishlist.includes(product.id);
 
   const handleError = () => {
     if (!hasError) {
@@ -20,12 +24,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   };
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product);
+  };
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product.id);
+  };
+
   return (
     <div className="group relative bg-white rounded-sm overflow-hidden h-full flex flex-col transition-shadow duration-500 hover:shadow-2xl hover:shadow-emerald-900/10">
       
       {/* Image Area - Arch Design */}
       <div className="relative aspect-[4/5] overflow-hidden bg-cream-50 mx-4 mt-4 rounded-t-[100px] rounded-b-md">
-        <div className="absolute top-4 right-4 z-20 pointer-events-none">
+        <div className="absolute top-4 right-4 z-20 flex gap-2">
             {product.tag && (
             <span className={`text-[10px] font-bold px-3 py-1 uppercase tracking-widest backdrop-blur-md ${
                 product.tag === 'SALE' ? 'bg-red-500/10 text-red-800' : 'bg-emerald-950/5 text-emerald-950'
@@ -35,6 +51,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             )}
         </div>
         
+        {/* Wishlist Button - Always visible on mobile, visible on hover on desktop */}
+        <button 
+          onClick={handleToggleWishlist}
+          className={`absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white/50 text-gray-400 hover:bg-white hover:text-red-500'}`}
+        >
+          <Heart size={14} fill={isWishlisted ? "currentColor" : "none"} />
+        </button>
+
         {/* Main Link Overlay for Image */}
         <Link to={`/product/${product.id}`} className="absolute inset-0 z-10" aria-label={`View ${product.name}`} />
 
@@ -94,8 +118,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <span className="text-xs text-gray-400 line-through font-light">{product.originalPrice}</span>
                 )}
             </Link>
-            <button className="text-emerald-950 hover:text-gold-600 transition-colors p-2 -mr-2" aria-label="Add to cart">
+            <button 
+              onClick={handleAddToCart}
+              className="text-emerald-950 hover:text-gold-600 transition-colors p-2 -mr-2 relative group/btn" 
+              aria-label="Add to cart"
+            >
                 <ShoppingBag size={18} strokeWidth={1.5} />
+                <span className="absolute -top-8 -right-4 bg-emerald-950 text-white text-[9px] py-1 px-2 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">Add to Bag</span>
             </button>
          </div>
       </div>

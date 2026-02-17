@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight } from 'lucide-react';
+import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag } from 'lucide-react';
 import { Logo } from './Logo';
 import { NAV_ITEMS, WHATSAPP_LINK, PRODUCTS } from '../constants';
 import { Product } from '../types';
+import { useShop } from '../context/ShopContext';
+import { CartDrawer } from './CartDrawer';
 
 // Specific Header Navigation including Wholesale for business focus
 const HEADER_NAV_ITEMS = [
@@ -20,6 +22,8 @@ export const Layout: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   
+  const { toggleCart, cartCount, notification } = useShop();
+
   const location = useLocation();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
@@ -74,6 +78,16 @@ export const Layout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-emerald-950 relative">
+      {/* Toast Notification */}
+      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] transition-all duration-300 transform ${notification ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
+        <div className="bg-emerald-950 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3">
+          <ShoppingBag size={16} className="text-gold-400" />
+          <span className="text-xs font-bold uppercase tracking-widest">{notification}</span>
+        </div>
+      </div>
+
+      <CartDrawer />
+
       {/* Header */}
       <header 
         className={`fixed top-0 left-0 w-full z-[60] bg-emerald-950 transition-all duration-300 shadow-md ${
@@ -119,14 +133,30 @@ export const Layout: React.FC = () => {
               ))}
             </nav>
             
-            {/* Search Icon Desktop */}
-            <button 
-                onClick={() => setIsSearchOpen(true)}
-                className="text-white hover:text-gold-400 transition-colors ml-4"
-                aria-label="Open Search"
-            >
-                <Search size={20} />
-            </button>
+            <div className="flex items-center gap-4 ml-6 pl-6 border-l border-white/10">
+                {/* Search Icon Desktop */}
+                <button 
+                    onClick={() => setIsSearchOpen(true)}
+                    className="text-white hover:text-gold-400 transition-colors"
+                    aria-label="Open Search"
+                >
+                    <Search size={20} />
+                </button>
+
+                {/* Cart Icon Desktop */}
+                <button 
+                    onClick={toggleCart}
+                    className="text-white hover:text-gold-400 transition-colors relative group"
+                    aria-label="Open Cart"
+                >
+                    <ShoppingBag size={20} />
+                    {cartCount > 0 && (
+                        <span className="absolute -top-2 -right-2 w-4 h-4 bg-gold-500 text-emerald-950 text-[9px] font-bold flex items-center justify-center rounded-full animate-fade-in-up">
+                            {cartCount}
+                        </span>
+                    )}
+                </button>
+            </div>
           </div>
 
           {/* Mobile Actions - Right aligned */}
@@ -137,8 +167,21 @@ export const Layout: React.FC = () => {
             >
                 <Search size={22} />
             </button>
+            
+            <button 
+                onClick={toggleCart}
+                className="text-gold-400 hover:text-white transition-colors relative"
+            >
+                <ShoppingBag size={22} />
+                {cartCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-white text-emerald-950 text-[9px] font-bold flex items-center justify-center rounded-full">
+                        {cartCount}
+                    </span>
+                )}
+            </button>
+
             <button
-                className="text-gold-400 p-1 hover:text-white transition-colors"
+                className="text-gold-400 p-1 hover:text-white transition-colors ml-2"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle menu"
             >

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Section } from '../components/Section';
-import { ExternalLink, ShoppingBag } from 'lucide-react';
+import { ExternalLink, ShoppingBag, Box, CheckCircle, Truck } from 'lucide-react';
 
 const Marketplaces: React.FC = () => {
   const marketplaces = [
@@ -51,7 +51,7 @@ const Marketplaces: React.FC = () => {
 
       <Section background="cream">
         <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
                 {marketplaces.map((market, idx) => (
                     <a 
                         href={market.link} 
@@ -88,6 +88,40 @@ const Marketplaces: React.FC = () => {
                         </div>
                     </a>
                 ))}
+            </div>
+
+            {/* Premium Promise Section */}
+            <div className="bg-white rounded-sm border border-gold-500/20 p-12 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gold-50 opacity-30"></div>
+                <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                    <div className="px-4">
+                        <div className="inline-flex justify-center items-center w-16 h-16 rounded-full bg-emerald-950/5 text-emerald-950 mb-6">
+                            <Box size={28} strokeWidth={1} />
+                        </div>
+                        <h4 className="font-serif text-lg text-emerald-950 mb-2">Secure Packaging</h4>
+                        <p className="text-xs text-gray-500 font-light leading-relaxed">
+                            Each piece is carefully packed in a hard-shell box with bubble wrap to ensure zero damage.
+                        </p>
+                    </div>
+                    <div className="px-4">
+                        <div className="inline-flex justify-center items-center w-16 h-16 rounded-full bg-emerald-950/5 text-emerald-950 mb-6">
+                            <Truck size={28} strokeWidth={1} />
+                        </div>
+                        <h4 className="font-serif text-lg text-emerald-950 mb-2">Insured Shipping</h4>
+                        <p className="text-xs text-gray-500 font-light leading-relaxed">
+                            Full transit insurance. If a package is lost or damaged, we provide an immediate replacement.
+                        </p>
+                    </div>
+                    <div className="px-4">
+                        <div className="inline-flex justify-center items-center w-16 h-16 rounded-full bg-emerald-950/5 text-emerald-950 mb-6">
+                            <CheckCircle size={28} strokeWidth={1} />
+                        </div>
+                        <h4 className="font-serif text-lg text-emerald-950 mb-2">Authenticity Check</h4>
+                        <p className="text-xs text-gray-500 font-light leading-relaxed">
+                            What you see is what you get. 100% genuine product photos with no heavy editing.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
       </Section>

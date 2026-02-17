@@ -3,13 +3,15 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Section } from '../components/Section';
 import { ProductCarousel } from '../components/ProductCarousel';
 import { PRODUCTS, PHONE_PRIMARY, FALLBACK_IMAGE } from '../constants';
-import { Star, ShieldCheck, Truck, MessageCircle, ExternalLink, ChevronRight, ChevronLeft, Share2, Heart, ArrowRight } from 'lucide-react';
+import { Star, ShieldCheck, Truck, MessageCircle, ExternalLink, ChevronRight, ChevronLeft, Share2, Heart, ArrowRight, Ruler, X, ShoppingBag } from 'lucide-react';
+import { useShop } from '../context/ShopContext';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeImage, setActiveImage] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   
   // Zoom state
   const [isZoomed, setIsZoomed] = useState(false);
@@ -17,6 +19,10 @@ const ProductDetail: React.FC = () => {
   
   const product = PRODUCTS.find(p => p.id === id);
   const relatedProducts = PRODUCTS.filter(p => p.category === product?.category && p.id !== product?.id).slice(0, 4);
+
+  // Shop Context
+  const { addToCart, toggleWishlist, wishlist } = useShop();
+  const isWishlisted = product ? wishlist.includes(product.id) : false;
 
   const DUMMY_GALLERY = [
       "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=800",
@@ -78,6 +84,23 @@ const ProductDetail: React.FC = () => {
     }
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: product.name,
+                text: `Check out ${product.name} on D GRAND Jewellery`,
+                url: window.location.href,
+            });
+        } catch (error) {
+            console.log('Error sharing', error);
+        }
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
+    }
+  };
+
   return (
     <div className="pt-24 bg-white min-h-screen">
       {/* Breadcrumbs */}
@@ -123,8 +146,11 @@ const ProductDetail: React.FC = () => {
                 )}
 
                 {/* Wishlist Button Overlay */}
-                <button className="absolute top-6 right-6 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors shadow-sm opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300">
-                    <Heart size={18} />
+                <button 
+                  onClick={() => toggleWishlist(product.id)}
+                  className={`absolute top-6 right-6 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 ${isWishlisted ? 'text-red-500' : 'text-gray-400 hover:text-red-500'}`}
+                >
+                    <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
                 </button>
             </div>
 
@@ -180,7 +206,7 @@ const ProductDetail: React.FC = () => {
                   <div>
                     <div className="flex justify-between items-start">
                         <p className="text-gold-600 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">{product.category}</p>
-                        <button className="text-gray-400 hover:text-emerald-950 transition-colors"><Share2 size={18} /></button>
+                        <button onClick={handleShare} className="text-gray-400 hover:text-emerald-950 transition-colors"><Share2 size={18} /></button>
                     </div>
                     <h1 className="font-serif text-4xl lg:text-5xl text-emerald-950 mb-4 leading-tight">{product.name}</h1>
                     
@@ -201,6 +227,16 @@ const ProductDetail: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Size Guide Button */}
+                  <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => setIsSizeGuideOpen(true)}
+                        className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-950 hover:text-gold-600 transition-colors border-b border-emerald-950 hover:border-gold-600 pb-1"
+                      >
+                          <Ruler size={14} /> Size Guide
+                      </button>
+                  </div>
+
                   {/* Description */}
                   <div className="prose prose-sm text-gray-500 font-light leading-relaxed">
                     <p>{product.description || "Experience the elegance of traditional craftsmanship with this exquisite piece. Designed for the modern woman who appreciates heritage, this jewellery item blends classic motifs with contemporary aesthetics."}</p>
@@ -208,34 +244,20 @@ const ProductDetail: React.FC = () => {
 
                   {/* Action Buttons */}
                   <div className="space-y-4 pt-4">
-                     {/* Retail Marketplaces */}
-                     <div className="grid grid-cols-2 gap-4">
-                        <a 
-                            href={product.amazonLink || '#'} 
-                            target="_blank" 
-                            rel="noreferrer"
-                            className="group flex flex-col items-center justify-center p-4 border border-gray-200 hover:border-gold-500 rounded-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white"
-                        >
-                            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1 group-hover:text-gold-600">Buy On</span>
-                            <span className="font-serif text-lg text-emerald-950">Amazon</span>
-                        </a>
-                        <a 
-                            href={product.flipkartLink || '#'} 
-                            target="_blank" 
-                            rel="noreferrer"
-                            className="group flex flex-col items-center justify-center p-4 border border-gray-200 hover:border-blue-500 rounded-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white"
-                        >
-                            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1 group-hover:text-blue-600">Buy On</span>
-                            <span className="font-serif text-lg text-emerald-950">Flipkart</span>
-                        </a>
-                     </div>
+                     {/* Add To Cart */}
+                     <button 
+                        onClick={() => addToCart(product)}
+                        className="w-full bg-emerald-950 text-white py-5 px-6 font-bold text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-gold-500 hover:text-emerald-950 transition-all duration-300 shadow-xl shadow-emerald-900/10"
+                     >
+                        <ShoppingBag size={18} /> Add To Bag
+                     </button>
                      
                      {/* Wholesale CTA */}
                      <button 
                         onClick={handleWholesaleEnquiry}
-                        className="w-full bg-emerald-950 text-white py-5 px-6 font-bold text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-gold-500 hover:text-emerald-950 transition-all duration-300 shadow-xl shadow-emerald-900/10"
+                        className="w-full bg-transparent border border-gray-200 text-gray-500 py-4 px-6 font-bold text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:border-emerald-950 hover:text-emerald-950 transition-all duration-300"
                      >
-                        <MessageCircle size={18} /> Get Wholesale Price
+                        <MessageCircle size={18} /> Bulk Enquiry
                      </button>
                   </div>
 
@@ -296,6 +318,134 @@ const ProductDetail: React.FC = () => {
                 <ProductCarousel products={relatedProducts} />
              </div>
           </Section>
+      )}
+
+      {/* Size Guide Modal */}
+      {isSizeGuideOpen && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSizeGuideOpen(false)}></div>
+            <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-sm relative z-10 animate-fade-in-up">
+                <button 
+                    onClick={() => setIsSizeGuideOpen(false)}
+                    className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                    <X size={20} />
+                </button>
+                
+                <div className="p-8 md:p-12">
+                    <h2 className="font-serif text-3xl text-emerald-950 mb-2">Size Guide</h2>
+                    <p className="text-sm text-gray-500 mb-8">Find the perfect fit for your D GRAND jewellery.</p>
+                    
+                    <div className="space-y-10">
+                        {/* Bangles */}
+                        <div>
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-950 mb-4 border-b border-gray-100 pb-2">Bangle Sizes</h3>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-xs text-left">
+                                    <thead className="bg-cream-50 text-emerald-950 font-bold uppercase">
+                                        <tr>
+                                            <th className="px-4 py-3">Size</th>
+                                            <th className="px-4 py-3">Inner Diameter (Inches)</th>
+                                            <th className="px-4 py-3">Inner Diameter (mm)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100 text-gray-600">
+                                        <tr>
+                                            <td className="px-4 py-3 font-bold">2.4</td>
+                                            <td className="px-4 py-3">2.25"</td>
+                                            <td className="px-4 py-3">57.2 mm</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-4 py-3 font-bold">2.6</td>
+                                            <td className="px-4 py-3">2.37"</td>
+                                            <td className="px-4 py-3">60.3 mm</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-4 py-3 font-bold">2.8</td>
+                                            <td className="px-4 py-3">2.50"</td>
+                                            <td className="px-4 py-3">63.5 mm</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-4 py-3 font-bold">2.10</td>
+                                            <td className="px-4 py-3">2.62"</td>
+                                            <td className="px-4 py-3">66.7 mm</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* Necklaces */}
+                        <div>
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-950 mb-4 border-b border-gray-100 pb-2">Necklace Lengths</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-gray-600">
+                                <ul className="space-y-3">
+                                    <li className="flex justify-between border-b border-gray-50 pb-2">
+                                        <span className="font-bold text-emerald-950">Choker</span>
+                                        <span>14-16 inches</span>
+                                    </li>
+                                    <li className="flex justify-between border-b border-gray-50 pb-2">
+                                        <span className="font-bold text-emerald-950">Princess</span>
+                                        <span>17-19 inches</span>
+                                    </li>
+                                    <li className="flex justify-between border-b border-gray-50 pb-2">
+                                        <span className="font-bold text-emerald-950">Matinee</span>
+                                        <span>20-24 inches</span>
+                                    </li>
+                                    <li className="flex justify-between border-b border-gray-50 pb-2">
+                                        <span className="font-bold text-emerald-950">Opera</span>
+                                        <span>28-36 inches</span>
+                                    </li>
+                                    <li className="flex justify-between border-b border-gray-50 pb-2">
+                                        <span className="font-bold text-emerald-950">Rope</span>
+                                        <span>36+ inches</span>
+                                    </li>
+                                </ul>
+                                <div className="bg-cream-50 p-4 rounded-sm flex items-center justify-center">
+                                    <p className="text-center italic text-gray-500">
+                                        "Most of our necklaces come with an adjustable dori (drawstring) or extension chain to fit all neck sizes comfortably."
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                         {/* Rings */}
+                         <div>
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-950 mb-4 border-b border-gray-100 pb-2">Ring Sizes</h3>
+                            <p className="text-xs text-gray-500 mb-4">Most of our rings are <strong>adjustable</strong> to fit sizes 12-18 (Indian Standard). For fixed sizes, refer below:</p>
+                             <div className="overflow-x-auto">
+                                <table className="w-full text-xs text-left">
+                                    <thead className="bg-cream-50 text-emerald-950 font-bold uppercase">
+                                        <tr>
+                                            <th className="px-4 py-3">Indian Size</th>
+                                            <th className="px-4 py-3">Diameter (mm)</th>
+                                            <th className="px-4 py-3">US Size</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100 text-gray-600">
+                                        <tr>
+                                            <td className="px-4 py-3 font-bold">12</td>
+                                            <td className="px-4 py-3">16.5 mm</td>
+                                            <td className="px-4 py-3">6</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-4 py-3 font-bold">14</td>
+                                            <td className="px-4 py-3">17.2 mm</td>
+                                            <td className="px-4 py-3">7</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-4 py-3 font-bold">17</td>
+                                            <td className="px-4 py-3">18.1 mm</td>
+                                            <td className="px-4 py-3">8</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
       )}
     </div>
   );

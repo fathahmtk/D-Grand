@@ -13,6 +13,10 @@ export interface Product {
   details?: Record<string, string>; // e.g. { "Material": "Brass", "Plating": "Gold" }
 }
 
+export interface CartItem extends Product {
+  quantity: number;
+}
+
 export interface NavItem {
   label: string;
   path: string;
@@ -33,6 +37,7 @@ export interface BlogPost {
   image: string;
   date: string;
   category: string;
+  content: string[]; // Array of paragraphs for the article body
 }
 
 export interface Testimonial {

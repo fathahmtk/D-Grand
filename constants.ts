@@ -17,6 +17,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Collections', path: '/collections' },
   { label: 'Wholesale', path: '/wholesale' },
   { label: 'Marketplaces', path: '/marketplaces' },
+  { label: 'Journal', path: '/journal' },
   { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
 ];
@@ -95,7 +96,6 @@ export const TESTIMONIALS: Testimonial[] = [
   }
 ];
 
-// Mock Products with Enhanced Details
 export const PRODUCTS: Product[] = [
   {
     id: '1',
@@ -251,35 +251,61 @@ export const PRODUCTS: Product[] = [
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: '1',
-    title: 'The Party Edit',
-    excerpt: 'Discover the latest trends in party wear jewellery that will make you stand out at every occasion.',
+    title: 'The Party Edit: Styling Heavy Jewellery',
+    excerpt: 'Discover the latest trends in party wear jewellery that will make you stand out at every occasion without overwhelming your outfit.',
     category: 'Editorial',
     image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop',
-    date: 'Jun 12, 2024'
+    date: 'Jun 12, 2024',
+    content: [
+      "When it comes to making a statement, nothing speaks louder than a well-chosen piece of heavy jewellery. Whether you are attending a wedding reception or a festive gala, the right accessories can transform a simple outfit into a regal ensemble.",
+      "The key to styling heavy jewellery is balance. If you are wearing a heavily embroidered saree or lehenga, opt for a single statement piece—like a grand choker or oversized chandbalis—rather than a full set. This prevents the look from becoming cluttered and allows the craftsmanship to shine.",
+      "For 2024, we are seeing a resurgence of antique gold finishes paired with pastel outfits. The contrast between the muted fabric and the rich, dark gold tones creates a sophisticated aesthetic that is both modern and rooted in tradition. Don't be afraid to mix metals; a hint of silver in your bangles can add an unexpected edge to a gold-dominated look.",
+      "Remember, confidence is your best accessory. Wear pieces that make you feel powerful and beautiful, and you will turn heads wherever you go."
+    ]
   },
   {
     id: '2',
-    title: 'Modern Heirlooms',
-    excerpt: 'The perfect gift guide for the most important woman in your life. Show her your love with timeless pieces.',
+    title: 'Modern Heirlooms: A Gift Guide',
+    excerpt: 'The perfect gift guide for the most important woman in your life. Show her your love with timeless pieces that she can cherish forever.',
     category: 'Gifting',
     image: 'https://images.unsplash.com/photo-1617038224531-ab5d78665b1a?q=80&w=800&auto=format&fit=crop',
-    date: 'May 08, 2024'
+    date: 'May 08, 2024',
+    content: [
+      "Jewellery has always been more than just adornment; it is a vessel for memories and a symbol of love. Finding the perfect piece for a loved one can be daunting, but the trick lies in understanding their personal style and the sentiment you wish to convey.",
+      "For the minimalist, consider delicate chains with solitaire pendants or sleek bracelets that can be worn daily. These pieces become a second skin, a constant reminder of the giver. Our 'Everyday Elegance' collection features high-quality AD stones set in rose gold plating, offering a subtle sparkle suitable for the office or brunch.",
+      "If you are gifting for a significant milestone—like an anniversary or a wedding—opt for something with cultural significance. Temple jewellery, with its divine motifs and sturdy craftsmanship, serves as a modern heirloom. These pieces age beautifully and can be passed down through generations, carrying stories with them.",
+      "Ultimately, the best gift is one chosen with thought. Pay attention to the jewellery she currently wears—does she prefer gold or silver? Heavy or light? Use these cues to find a treasure she will cherish forever."
+    ]
   },
   {
     id: '3',
-    title: 'The Bridal Guide',
-    excerpt: 'Complete your bridal look with our exclusive wedding collection featuring intricate craftsmanship.',
+    title: 'The Bridal Trousseau Checklist',
+    excerpt: 'Complete your bridal look with our exclusive wedding collection. From Maang Tikka to Toe Rings, here is everything you need.',
     category: 'Wedding',
     image: 'https://images.unsplash.com/photo-1602751584552-8ba420552259?q=80&w=800&auto=format&fit=crop',
-    date: 'Apr 20, 2024'
+    date: 'Apr 20, 2024',
+    content: [
+      "Every bride dreams of looking like royalty on her big day. While the outfit sets the tone, it is the jewellery that adds the finishing touch of grandeur. Building a bridal trousseau is an art, requiring a mix of statement pieces for the main events and lighter sets for post-wedding functions.",
+      "1. The Maang Tikka & Matha Patti: These frame the face and are essential for the traditional Indian bridal look. Choose a size that complements your forehead width.",
+      "2. The Choker & Long Haram: Layering is a trend that isn't going away. Pair a snug-fitting choker with a long, architectural haram to create depth and drama.",
+      "3. Bangles & Kadas: A bride's hands are always in focus. Mix glass bangles with heavy gold-plated kadas for a rich, textured sound and look.",
+      "4. Waist Belt (Vaddanam): Not only does it accentuate the waist, but it also holds the saree pleats in place, ensuring you look poised throughout the ceremony.",
+      "At D GRAND, we specialize in complete bridal sets that ensure every piece matches perfectly in tone and finish, taking the stress out of your wedding shopping."
+    ]
   },
   {
     id: '4',
-    title: 'Everyday Luxury',
-    excerpt: 'Matching sets and complementary pieces for the perfect couple. Celebrate your bond with elegance.',
+    title: 'Everyday Luxury for the Workplace',
+    excerpt: 'Minimalist designs that add a touch of sparkle to your 9-to-5 without breaking the dress code. Celebrate your success with elegance.',
     category: 'Lifestyle',
     image: 'https://images.unsplash.com/photo-1630568116558-8ba948ef53ac?q=80&w=800&auto=format&fit=crop',
-    date: 'Feb 10, 2024'
+    date: 'Feb 10, 2024',
+    content: [
+      "Gone are the days when jewellery was reserved for special occasions. The modern woman expresses herself through style every day, including in the boardroom. Workplace jewellery should be understated yet sophisticated, enhancing your professional attire without being distracting.",
+      "Stick to the 'Less is More' philosophy. A pair of classic pearl studs or small geometric hoops can brighten your face during video calls. Avoid bangles that jingle, as they can be noisy while typing; instead, opt for a sleek watch or a fixed cuff bracelet.",
+      "Pendants are a great way to add personality to a button-down shirt. Choose a chain length that sits just below the collarbone for the most flattering look.",
+      "Investing in high-quality imitation jewellery allows you to rotate your look frequently without the fear of losing expensive real gold pieces during the commute. It's about feeling confident and put-together, ready to conquer the day."
+    ]
   }
 ];
 
