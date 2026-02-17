@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag, Heart, ArrowUp } from 'lucide-react';
+import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag, Heart, ArrowUp, ArrowRight } from 'lucide-react';
 import { Logo } from './Logo';
 import { NAV_ITEMS, WHATSAPP_LINK, PRODUCTS } from '../constants';
 import { Product } from '../types';
 import { useShop } from '../context/ShopContext';
 import { CartDrawer } from './CartDrawer';
 import { QuickView } from './QuickView';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Specific Header Navigation including Wholesale for business focus
 const HEADER_NAV_ITEMS = [
   { label: 'Home', path: '/' },
   { label: 'Collections', path: '/collections' },
+  { label: 'Categories', path: '/collections' },
   { label: 'Wholesale', path: '/wholesale' },
   { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
@@ -39,7 +40,6 @@ export const Layout: React.FC = () => {
     setIsSearchOpen(false);
   }, [location]);
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -49,7 +49,6 @@ export const Layout: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle Search Logic
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
       const query = searchQuery.toLowerCase();
@@ -63,7 +62,6 @@ export const Layout: React.FC = () => {
     }
   }, [searchQuery]);
 
-  // Lock body scroll when overlays are open
   useEffect(() => {
     if (isMenuOpen || isSearchOpen) {
       document.body.style.overflow = 'hidden';
@@ -94,140 +92,118 @@ export const Layout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans text-emerald-950 relative">
+    <div className="min-h-screen flex flex-col font-sans text-emerald-950 relative selection:bg-gold-500 selection:text-white">
       {/* Toast Notification */}
-      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] transition-all duration-300 transform ${notification ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
-        <div className="bg-emerald-950 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3 border border-gold-500/20">
-          <ShoppingBag size={16} className="text-gold-400" />
-          <span className="text-xs font-bold uppercase tracking-widest">{notification}</span>
-        </div>
-      </div>
+      <AnimatePresence>
+        {notification && (
+            <motion.div 
+                initial={{ opacity: 0, y: 50, x: "-50%" }}
+                animate={{ opacity: 1, y: 0, x: "-50%" }}
+                exit={{ opacity: 0, y: 20, x: "-50%" }}
+                className="fixed bottom-8 left-1/2 z-[110]"
+            >
+                <div className="bg-emerald-950 text-white px-8 py-4 shadow-2xl flex items-center gap-3 border border-gold-500/20 rounded-none">
+                <ShoppingBag size={16} className="text-gold-400" />
+                <span className="text-xs font-bold uppercase tracking-widest">{notification}</span>
+                </div>
+            </motion.div>
+        )}
+      </AnimatePresence>
 
       <CartDrawer />
       <QuickView />
 
       {/* Header */}
       <header 
-        className={`fixed top-0 left-0 w-full z-[60] bg-emerald-950 transition-all duration-300 shadow-md ${
-          scrolled ? 'py-2' : 'py-3'
+        className={`fixed top-0 left-0 w-full z-[60] transition-all duration-300 ${
+          scrolled || !isHome ? 'bg-emerald-950/95 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-5'
         }`}
       >
-        <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
+        <div className="container mx-auto px-6 flex justify-between items-center">
           
-          {/* Logo - Aligned Left */}
           <div className="flex-shrink-0 z-[60]">
              <NavLink to="/">
                 <Logo 
                   variant="light" 
                   size="small"
-                  className="origin-left transform scale-90 md:scale-100"
+                  className={`origin-left transform transition-transform duration-300 ${scrolled ? 'scale-75' : 'scale-90 md:scale-100'}`}
                 />
              </NavLink>
           </div>
 
-          {/* Desktop Nav - Aligned Right */}
           <div className="hidden md:flex items-center gap-8 ml-auto">
-            <nav className="flex items-center gap-8">
+            <nav className="flex items-center gap-6">
               {HEADER_NAV_ITEMS.map((item) => (
                 <NavLink
                   key={item.label}
                   to={item.path}
                   end={item.path === '/'}
                   className={({ isActive }) =>
-                    `text-xs tracking-[0.2em] uppercase font-bold transition-all duration-300 relative group ${
+                    `text-[10px] tracking-[0.2em] uppercase font-bold transition-all duration-300 relative group font-sans ${
                       isActive 
                         ? 'text-gold-400' 
                         : 'text-white hover:text-gold-400'
                     }`
                   }
                 >
-                  {({ isActive }) => (
-                    <>
-                      {item.label}
-                      <span className={`absolute -bottom-2 left-0 w-full h-[1px] bg-gold-400 transform origin-left transition-transform duration-300 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
-                    </>
-                  )}
+                  {item.label}
                 </NavLink>
               ))}
             </nav>
             
-            <div className="flex items-center gap-4 ml-6 pl-6 border-l border-white/10">
-                {/* Search Icon Desktop */}
+            <div className="flex items-center gap-5 ml-6 pl-6 border-l border-white/10">
                 <button 
                     onClick={() => setIsSearchOpen(true)}
                     className="text-white hover:text-gold-400 transition-colors"
-                    aria-label="Open Search"
                 >
-                    <Search size={20} />
+                    <Search size={18} />
                 </button>
 
-                {/* Wishlist Icon Desktop */}
+                <a 
+                    href={WHATSAPP_LINK}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-white hover:text-gold-400 transition-colors"
+                    aria-label="Contact via WhatsApp"
+                >
+                    <MessageCircle size={18} />
+                </a>
+
                 <Link 
                     to="/wishlist"
-                    className="text-white hover:text-gold-400 transition-colors relative group"
-                    aria-label="Open Wishlist"
+                    className="text-white hover:text-gold-400 transition-colors relative"
                 >
-                    <Heart size={20} />
+                    <Heart size={18} />
                     {wishlistCount > 0 && (
-                        <span className="absolute -top-2 -right-2 w-4 h-4 bg-gold-500 text-emerald-950 text-[9px] font-bold flex items-center justify-center rounded-full animate-fade-in-up">
-                            {wishlistCount}
-                        </span>
+                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-gold-500 rounded-full"></span>
                     )}
                 </Link>
 
-                {/* Cart Icon Desktop */}
                 <button 
                     onClick={toggleCart}
-                    className="text-white hover:text-gold-400 transition-colors relative group"
-                    aria-label="Open Cart"
+                    className="text-white hover:text-gold-400 transition-colors relative"
                 >
-                    <ShoppingBag size={20} />
+                    <ShoppingBag size={18} />
                     {cartCount > 0 && (
-                        <span className="absolute -top-2 -right-2 w-4 h-4 bg-gold-500 text-emerald-950 text-[9px] font-bold flex items-center justify-center rounded-full animate-fade-in-up">
-                            {cartCount}
-                        </span>
+                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-gold-500 rounded-full"></span>
                     )}
                 </button>
             </div>
           </div>
 
-          {/* Mobile Actions - Right aligned */}
-          <div className="md:hidden flex items-center gap-4 z-[60]">
-            <button 
-                onClick={() => setIsSearchOpen(true)}
-                className="text-gold-400 hover:text-white transition-colors"
-            >
-                <Search size={22} />
-            </button>
-            
-             <Link 
-                to="/wishlist"
-                className="text-gold-400 hover:text-white transition-colors relative"
-            >
-                <Heart size={22} />
-                {wishlistCount > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-white text-emerald-950 text-[9px] font-bold flex items-center justify-center rounded-full">
-                        {wishlistCount}
-                    </span>
-                )}
+          <div className="md:hidden flex items-center gap-5 z-[60]">
+             <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="text-gold-400">
+                <MessageCircle size={20} />
+             </a>
+             <Link to="/wishlist" className="text-gold-400">
+                <Heart size={20} />
             </Link>
-
-            <button 
-                onClick={toggleCart}
-                className="text-gold-400 hover:text-white transition-colors relative"
-            >
-                <ShoppingBag size={22} />
-                {cartCount > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-white text-emerald-950 text-[9px] font-bold flex items-center justify-center rounded-full">
-                        {cartCount}
-                    </span>
-                )}
+            <button onClick={toggleCart} className="text-gold-400">
+                <ShoppingBag size={20} />
             </button>
-
             <button
-                className="text-gold-400 p-1 hover:text-white transition-colors ml-2"
+                className="text-gold-400"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                aria-label="Toggle menu"
             >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -235,250 +211,181 @@ export const Layout: React.FC = () => {
         </div>
       </header>
 
-      {/* Search Overlay */}
-      {isSearchOpen && (
-        <div className="fixed inset-0 bg-emerald-950/98 z-[70] backdrop-blur-md animate-fade-in flex flex-col">
-           {/* Search Header */}
-           <div className="container mx-auto px-6 py-6 flex justify-end">
-              <button 
-                onClick={() => setIsSearchOpen(false)} 
-                className="group flex items-center gap-2 text-gold-400/70 hover:text-gold-400 transition-colors text-xs uppercase tracking-widest font-bold"
-              >
-                  Close <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
-              </button>
-           </div>
-           
-           <div className="flex-grow overflow-y-auto">
-             <div className="container mx-auto px-6 max-w-4xl pt-10 pb-20">
-                 {/* Input */}
-                 <form onSubmit={handleSearchSubmit} className="relative mb-16 group">
-                     <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-gold-500/50 group-focus-within:text-gold-500 transition-colors" size={32} />
-                     <input 
-                       type="text" 
-                       autoFocus
-                       placeholder="Search products..." 
-                       className="w-full bg-transparent text-3xl md:text-5xl font-serif text-white py-6 pl-16 pr-4 border-b-2 border-white/10 focus:border-gold-500 focus:outline-none placeholder:text-white/10 transition-all"
-                       value={searchQuery}
-                       onChange={(e) => setSearchQuery(e.target.value)}
-                     />
-                 </form>
+      {/* Search Overlay - Industrial Style */}
+      <AnimatePresence>
+        {isSearchOpen && (
+            <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-emerald-950/98 z-[70] backdrop-blur-xl flex flex-col"
+            >
+            <div className="container mx-auto px-6 py-6 flex justify-end">
+                <button 
+                    onClick={() => setIsSearchOpen(false)} 
+                    className="group flex items-center gap-2 text-gold-400 hover:text-white transition-colors text-[10px] uppercase tracking-widest font-bold"
+                >
+                    Close <X size={20} />
+                </button>
+            </div>
+            
+            <div className="flex-grow overflow-y-auto">
+                <div className="container mx-auto px-6 max-w-4xl pt-10 pb-20">
+                    <form onSubmit={handleSearchSubmit} className="relative mb-16">
+                        <input 
+                        type="text" 
+                        autoFocus
+                        placeholder="Search..." 
+                        className="w-full bg-transparent text-4xl md:text-6xl font-display font-bold text-white py-6 border-b-2 border-white/10 focus:border-gold-500 focus:outline-none placeholder:text-white/10 transition-all uppercase"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </form>
 
-                 {/* Results */}
-                 {searchQuery.length > 1 && (
-                     <div className="animate-fade-in-up">
-                        <h3 className="text-gold-400 text-xs uppercase tracking-[0.2em] mb-8 font-bold">
-                            {searchResults.length} Result{searchResults.length !== 1 && 's'} Found
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {searchResults.map(product => (
-                                <Link 
-                                  key={product.id} 
-                                  to={`/product/${product.id}`}
-                                  onClick={() => setIsSearchOpen(false)}
-                                  className="flex items-center gap-6 p-4 rounded-md bg-white/5 hover:bg-white/10 transition-all border border-transparent hover:border-gold-500/30 group"
-                                >
-                                    <div className="w-20 h-20 bg-emerald-900 rounded-sm overflow-hidden flex-shrink-0">
-                                        <img src={product.image} alt={product.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                                    </div>
-                                    <div className="flex-grow">
-                                        <p className="text-[10px] text-gold-400/70 uppercase tracking-widest mb-1 group-hover:text-gold-400">{product.category}</p>
-                                        <h4 className="text-xl font-serif text-white group-hover:text-gold-200 transition-colors">{product.name}</h4>
-                                        <p className="text-sm text-gray-400 mt-1 font-light">{product.price}</p>
-                                    </div>
-                                    <ChevronRight className="text-white/20 group-hover:text-gold-500 transition-colors transform group-hover:translate-x-1" />
-                                </Link>
-                            ))}
-                        </div>
-                        {searchResults.length === 0 && (
-                            <div className="text-center py-12 border border-white/5 rounded-lg bg-white/5">
-                                <p className="text-white/40 text-lg font-serif italic">No treasures found matching "{searchQuery}"</p>
+                    {searchQuery.length > 1 && (
+                        <div className="space-y-4">
+                            <h3 className="text-gold-400 text-[10px] uppercase tracking-[0.2em] mb-8 font-bold">
+                                {searchResults.length} Results
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {searchResults.map(product => (
+                                    <Link 
+                                    key={product.id} 
+                                    to={`/product/${product.id}`}
+                                    onClick={() => setIsSearchOpen(false)}
+                                    className="flex items-center gap-6 p-4 bg-white/5 hover:bg-white/10 transition-all group"
+                                    >
+                                        <div className="w-16 h-16 bg-emerald-900 overflow-hidden">
+                                            <img src={product.image} alt={product.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100" />
+                                        </div>
+                                        <div className="flex-grow">
+                                            <p className="text-[9px] text-gold-400 uppercase tracking-widest mb-1">{product.category}</p>
+                                            <h4 className="text-lg font-display text-white group-hover:text-gold-200">{product.name}</h4>
+                                        </div>
+                                        <ArrowRight className="text-white/20 group-hover:text-gold-500" />
+                                    </Link>
+                                ))}
                             </div>
-                        )}
-                     </div>
-                 )}
-                 
-                 {/* Suggestions when empty */}
-                 {searchQuery.length <= 1 && (
-                     <div className="text-center md:text-left animate-fade-in-up">
-                         <h3 className="text-white/30 text-xs uppercase tracking-[0.2em] mb-6 font-bold">Popular Categories</h3>
-                         <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                            {['Necklaces', 'Bridal Sets', 'Earrings', 'Temple'].map(tag => (
-                                <button 
-                                    key={tag}
-                                    onClick={() => setSearchQuery(tag)}
-                                    className="px-6 py-3 border border-white/10 rounded-full text-white/60 hover:text-emerald-950 hover:bg-gold-500 hover:border-gold-500 transition-all text-sm uppercase tracking-wider"
-                                >
-                                    {tag}
-                                </button>
-                            ))}
-                         </div>
-                     </div>
-                 )}
-             </div>
-           </div>
-        </div>
-      )}
+                        </div>
+                    )}
+                </div>
+            </div>
+            </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Nav Overlay */}
-      <div 
-        className={`md:hidden fixed inset-0 bg-emerald-950 z-[55] flex flex-col items-center justify-center transition-all duration-500 ${
-            isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible delay-300'
-        }`}
-      >
-        <nav className="flex flex-col space-y-6 text-center p-6 w-full max-h-[80vh] overflow-y-auto">
-          {HEADER_NAV_ITEMS.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              end={item.path === '/'}
-              onClick={() => setIsMenuOpen(false)}
-              className={({ isActive }) =>
-                `text-3xl font-serif tracking-wide transition-colors duration-300 ${
-                  isActive ? 'text-gold-400' : 'text-emerald-100 hover:text-white'
-                }`
-              }
+      <AnimatePresence>
+        {isMenuOpen && (
+            <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="fixed inset-0 bg-emerald-950 z-[55] pt-24 px-6 flex flex-col"
             >
-              {item.label}
-            </NavLink>
-          ))}
-          <div className="w-12 h-[1px] bg-white/10 mx-auto my-2"></div>
-          <Link to="/marketplaces" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">
-            Marketplaces
-          </Link>
-          <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">
-            Wishlist ({wishlistCount})
-          </Link>
-          
-          <div className="flex justify-center gap-6 mt-8 pt-8 border-t border-white/5">
-             <a href="#" className="text-gold-400 hover:text-white transition-colors"><Instagram size={24} /></a>
-             <a href="#" className="text-gold-400 hover:text-white transition-colors"><Facebook size={24} /></a>
-             <a href="#" className="text-gold-400 hover:text-white transition-colors"><Twitter size={24} /></a>
-          </div>
-        </nav>
-      </div>
+                <nav className="flex flex-col space-y-6">
+                {HEADER_NAV_ITEMS.map((item) => (
+                    <NavLink
+                    key={item.label}
+                    to={item.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={({ isActive }) =>
+                        `text-4xl font-display font-bold transition-colors ${
+                        isActive ? 'text-gold-400' : 'text-white/90'
+                        }`
+                    }
+                    >
+                    {item.label}
+                    </NavLink>
+                ))}
+                </nav>
+                <div className="mt-auto pb-12">
+                    <div className="flex gap-6 mb-8">
+                        <Instagram className="text-gold-400" />
+                        <Facebook className="text-gold-400" />
+                    </div>
+                    <p className="text-emerald-500 text-xs">© D GRAND Jewellery</p>
+                </div>
+            </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Main Content - Add padding top to account for fixed header */}
-      <main className={`flex-grow ${isHome ? '' : 'pt-20'}`}>
+      <main className="flex-grow">
         <Outlet />
       </main>
 
-      {/* Footer */}
-      <footer className="bg-emerald-950 text-white border-t border-gold-500/10">
-        
-        {/* Top Info Section */}
-        <div className="container mx-auto px-6 py-20 border-b border-emerald-900/50">
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-center md:text-left">
-              <div className="p-8 border border-emerald-900/30 rounded-sm hover:border-gold-500/30 transition-all duration-500 hover:-translate-y-1 bg-emerald-900/10">
-                 <div className="w-12 h-12 mx-auto md:mx-0 bg-emerald-900 rounded-full flex items-center justify-center mb-6 text-gold-400">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                 </div>
-                 <h4 className="font-serif text-xl mb-3">New Collections</h4>
-                 <p className="text-xs text-gray-400 leading-relaxed font-light">Discover our latest designs updated weekly for wholesale partners.</p>
-              </div>
-              <div className="p-8 border border-emerald-900/30 rounded-sm hover:border-gold-500/30 transition-all duration-500 hover:-translate-y-1 bg-emerald-900/10">
-                 <div className="w-12 h-12 mx-auto md:mx-0 bg-emerald-900 rounded-full flex items-center justify-center mb-6 text-gold-400">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                 </div>
-                 <h4 className="font-serif text-xl mb-3">Festive Special</h4>
-                 <p className="text-xs text-gray-400 leading-relaxed font-light">Exclusive bridal and festive sets curated for the season.</p>
-              </div>
-              <div className="p-8 border border-emerald-900/30 rounded-sm hover:border-gold-500/30 transition-all duration-500 hover:-translate-y-1 bg-emerald-900/10">
-                 <div className="w-12 h-12 mx-auto md:mx-0 bg-emerald-900 rounded-full flex items-center justify-center mb-6 text-gold-400">
-                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                 </div>
-                 <h4 className="font-serif text-xl mb-3">Wholesale Rates</h4>
-                 <p className="text-xs text-gray-400 leading-relaxed font-light">Direct factory pricing for bulk orders with worldwide shipping.</p>
-              </div>
-              
-              <div className="flex flex-col justify-center items-center text-center p-8 bg-gradient-to-br from-emerald-900/30 to-emerald-950 rounded-sm relative overflow-hidden border border-gold-500/20">
-                 <div className="absolute top-0 right-0 w-24 h-24 bg-gold-500/10 rounded-full blur-3xl"></div>
-                 <h3 className="font-serif text-3xl mb-2 text-gold-400">Since 2018</h3>
-                 <p className="text-[10px] tracking-[0.3em] uppercase mb-6 text-emerald-200">Crafting Elegance</p>
-                 <NavLink to="/about" className="px-8 py-3 border border-gold-500 text-gold-500 text-[10px] uppercase tracking-[0.2em] hover:bg-gold-500 hover:text-emerald-950 transition-all duration-300">Our Story</NavLink>
-              </div>
-           </div>
-        </div>
+      <footer className="bg-emerald-950 text-white pt-24 pb-8 border-t border-white/5">
+        <div className="container mx-auto px-6">
+           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+               <div>
+                  <h5 className="font-display text-lg mb-6 text-white">D GRAND</h5>
+                  <p className="text-emerald-100/60 text-sm leading-relaxed max-w-xs mb-6">
+                      Premium imitation jewellery crafted for the modern era. Wholesale & Retail excellence since 2018.
+                  </p>
+               </div>
+               
+               <div>
+                  <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Collections</h5>
+                  <ul className="space-y-4 text-xs text-gray-400 font-medium">
+                     <li><Link to="/collections" className="hover:text-white transition-colors">Bridal Sets</Link></li>
+                     <li><Link to="/collections" className="hover:text-white transition-colors">Temple Jewellery</Link></li>
+                     <li><Link to="/collections" className="hover:text-white transition-colors">Contemporary</Link></li>
+                     <li><Link to="/collections" className="hover:text-white transition-colors">Rose Gold</Link></li>
+                  </ul>
+               </div>
 
-        {/* Main Footer Content */}
-        <div className="container mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-4 gap-12">
-           <div>
-              <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Quick Links</h5>
-              <ul className="space-y-4 text-xs text-gray-400">
-                {NAV_ITEMS.map(item => (
-                  <li key={item.path}><NavLink to={item.path} className="hover:text-white transition-colors flex items-center gap-3 group"><span className="w-1 h-1 bg-gold-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>{item.label}</NavLink></li>
-                ))}
-              </ul>
+               <div>
+                  <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Support</h5>
+                  <ul className="space-y-4 text-xs text-gray-400 font-medium">
+                     <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+                     <li><Link to="/wholesale" className="hover:text-white transition-colors">Wholesale Enquiry</Link></li>
+                     <li><Link to="/about" className="hover:text-white transition-colors">Shipping Policy</Link></li>
+                     <li><Link to="/about" className="hover:text-white transition-colors">Returns</Link></li>
+                  </ul>
+               </div>
+
+               <div>
+                  <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Newsletter</h5>
+                  <form onSubmit={handleSubscribe} className="relative border-b border-white/20 pb-2">
+                      <input 
+                         type="email" 
+                         placeholder="EMAIL ADDRESS" 
+                         className="w-full bg-transparent text-xs text-white placeholder:text-white/20 focus:outline-none"
+                         value={email}
+                         onChange={(e) => setEmail(e.target.value)}
+                      />
+                      <button type="submit" className="absolute right-0 top-0 text-gold-400 hover:text-white transition-colors">
+                          <ArrowRight size={16} />
+                      </button>
+                  </form>
+               </div>
            </div>
            
-           <div>
-              <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Customer Care</h5>
-              <ul className="space-y-4 text-xs text-gray-400">
-                 <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                 <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                 <li><a href="#" className="hover:text-white transition-colors">Shipping Information</a></li>
-                 <li><a href="#" className="hover:text-white transition-colors">Returns & Exchange</a></li>
-              </ul>
-           </div>
-
-           <div>
-              <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Connect</h5>
-              <div className="flex gap-4 mb-8">
-                 <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:bg-gold-500 hover:text-emerald-950 hover:border-gold-500 transition-all duration-300"><Instagram size={16} /></a>
-                 <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:bg-gold-500 hover:text-emerald-950 hover:border-gold-500 transition-all duration-300"><Facebook size={16} /></a>
-                 <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:bg-gold-500 hover:text-emerald-950 hover:border-gold-500 transition-all duration-300"><Twitter size={16} /></a>
-              </div>
-              <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4 text-gold-400">Payments</h5>
-              <div className="flex gap-3 text-gray-500 items-center">
-                 <CreditCard size={20} />
-                 <span className="text-[10px] font-mono">SECURE PAYMENT</span>
-              </div>
-           </div>
-
-           <div>
-              <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Newsletter</h5>
-              <p className="text-xs text-gray-400 mb-6 font-light leading-relaxed">Subscribe to receive updates, access to exclusive deals, and more.</p>
-              <form onSubmit={handleSubscribe} className="relative">
-                 <input 
-                    type="email" 
-                    placeholder="Email Address" 
-                    className="w-full bg-white/5 border-b border-white/20 px-0 py-3 text-xs text-white focus:outline-none focus:border-gold-500 transition-colors placeholder:text-gray-600" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                 />
-                 <button type="submit" className="absolute right-0 top-0 h-full text-gold-500 text-[10px] font-bold uppercase hover:text-white transition-colors">Subscribe</button>
-              </form>
-           </div>
-        </div>
-
-        <div className="border-t border-emerald-900/50 py-8">
-           <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-500 uppercase tracking-[0.2em]">
-              <p>© {new Date().getFullYear()} D GRAND Jewellery.</p>
-              <p className="mt-2 md:mt-0">Designed for Elegance</p>
+           <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-white/40 uppercase tracking-widest">
+               <p>© {new Date().getFullYear()} D GRAND Jewellery</p>
+               <div className="flex gap-6 mt-4 md:mt-0">
+                   <a href="#" className="hover:text-white">Privacy</a>
+                   <a href="#" className="hover:text-white">Terms</a>
+               </div>
            </div>
         </div>
       </footer>
 
-      {/* Floating Buttons Group */}
+      {/* Floating Buttons */}
       <div className="fixed bottom-8 right-8 z-40 flex flex-col gap-4">
-          {/* Back to Top */}
-          <button 
-             onClick={scrollToTop}
-             className={`w-14 h-14 bg-white text-emerald-950 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:bg-gold-500 hover:text-white ${showBackToTop ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}
-             aria-label="Scroll to top"
-          >
-              <ArrowUp size={24} />
-          </button>
-
-          {/* WhatsApp */}
-          <a
-            href={WHATSAPP_LINK}
-            target="_blank"
-            rel="noreferrer"
-            className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.3)] hover:scale-105 hover:shadow-[0_10px_30px_rgba(37,211,102,0.5)] transition-all duration-300 flex items-center justify-center group"
-            title="Chat on WhatsApp"
-          >
-            <MessageCircle size={28} className="fill-current" />
-          </a>
+          <AnimatePresence>
+            {showBackToTop && (
+                <motion.button 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    onClick={scrollToTop}
+                    className="w-12 h-12 bg-white text-emerald-950 flex items-center justify-center hover:bg-gold-500 transition-colors shadow-xl"
+                >
+                    <ArrowUp size={20} />
+                </motion.button>
+            )}
+          </AnimatePresence>
       </div>
     </div>
   );

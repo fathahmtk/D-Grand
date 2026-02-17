@@ -1,40 +1,23 @@
 import React, { useState } from 'react';
 import { Product } from '../types';
-import { ShoppingBag, ArrowRight, ChevronDown, ChevronUp, Heart, Eye } from 'lucide-react';
+import { MessageCircle, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { FALLBACK_IMAGE } from '../constants';
+import { FALLBACK_IMAGE, PHONE_PRIMARY } from '../constants';
 import { useShop } from '../context/ShopContext';
+import { motion } from 'framer-motion';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState(product.image);
-  const [hasError, setHasError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   
-  const { addToCart, toggleWishlist, wishlist, openQuickView } = useShop();
-  const isWishlisted = wishlist.includes(product.id);
+  const { openQuickView } = useShop();
 
   const handleError = () => {
-    if (!hasError) {
-      setHasError(true);
-      setImgSrc(FALLBACK_IMAGE);
-    }
-  };
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart(product);
-  };
-
-  const handleToggleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleWishlist(product.id);
+    setImgSrc(FALLBACK_IMAGE);
   };
   
   const handleQuickView = (e: React.MouseEvent) => {
@@ -43,110 +26,57 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     openQuickView(product);
   };
 
+  const handleEnquire = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const text = `Hi, I am interested in ${product.name} (Category: ${product.category}). Please share details.`;
+      window.open(`https://wa.me/91${PHONE_PRIMARY}?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
   return (
-    <div className="group relative bg-white rounded-sm overflow-hidden h-full flex flex-col transition-shadow duration-500 hover:shadow-2xl hover:shadow-emerald-900/10">
-      
-      {/* Image Area - Arch Design */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-cream-100 mx-4 mt-4 rounded-t-[100px] rounded-b-md">
-        <div className="absolute top-4 right-4 z-20 flex gap-2">
-            {product.tag && (
-            <span className={`text-[10px] font-bold px-3 py-1 uppercase tracking-widest backdrop-blur-md ${
-                product.tag === 'SALE' ? 'bg-red-500/10 text-red-800' : 'bg-emerald-950/5 text-emerald-950'
-            }`}>
-                {product.tag}
-            </span>
-            )}
-        </div>
-        
-        {/* Wishlist Button - Always visible on mobile, visible on hover on desktop */}
-        <button 
-          onClick={handleToggleWishlist}
-          className={`absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white/50 text-gray-400 hover:bg-white hover:text-red-500'}`}
-        >
-          <Heart size={14} fill={isWishlisted ? "currentColor" : "none"} />
-        </button>
+    <div 
+      className="group relative h-full flex flex-col"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* 1:1 Aspect Ratio Image */}
+      <div className="relative aspect-square w-full overflow-hidden bg-gray-50 mb-4 shadow-sm group-hover:shadow-lg transition-shadow duration-300">
+        <Link to={`/product/${product.id}`} className="absolute inset-0 z-10" />
 
-        {/* Quick View Button - Appears on hover */}
-        <button
-          onClick={handleQuickView}
-          className="absolute top-14 left-4 z-20 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-emerald-950 transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 hover:bg-emerald-950 hover:text-white"
-          title="Quick View"
-        >
-           <Eye size={14} />
-        </button>
-
-        {/* Main Link Overlay for Image */}
-        <Link to={`/product/${product.id}`} className="absolute inset-0 z-10" aria-label={`View ${product.name}`} />
-
-        <img
+        <motion.img
             src={imgSrc}
             alt={product.name}
             loading="lazy"
-            onLoad={() => setIsLoaded(true)}
             onError={handleError}
-            className={`w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105 ${
-              isLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"
+            animate={{ scale: isHovered ? 1.1 : 1 }}
         />
         
-        {/* Quick Action Overlay Visuals */}
-        <div className="absolute inset-0 bg-emerald-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none z-20">
-             <div className="bg-white text-emerald-950 px-6 py-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100 flex items-center gap-2 shadow-lg">
-                <span className="text-[10px] font-bold uppercase tracking-widest">View Details</span>
-                <ArrowRight size={14} />
-             </div>
-        </div>
+        {/* Hover Actions */}
+        <div className={`absolute inset-0 bg-black/10 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
+
+        <button 
+            onClick={handleQuickView}
+            className={`absolute top-4 right-4 z-20 w-10 h-10 bg-white/95 text-emerald-950 flex items-center justify-center rounded-full hover:bg-emerald-950 hover:text-white transition-all duration-300 transform ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}
+        >
+            <Eye size={18} />
+        </button>
       </div>
 
-      {/* Product Info */}
-      <div className="px-6 pt-5 pb-6 flex flex-col flex-grow justify-between">
-         <div>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">{product.category}</p>
-            <Link to={`/product/${product.id}`} className="block">
-                <h3 className="font-serif text-lg text-emerald-950 leading-snug mb-4 group-hover:text-gold-600 transition-colors">{product.name}</h3>
-            </Link>
-
-            {/* Accordion Details */}
-            {product.details && (
-              <div className="mb-4 border-t border-gray-100 pt-3">
-                 <button 
-                   onClick={() => setIsDetailsOpen(!isDetailsOpen)}
-                   className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold-600 hover:text-emerald-950 transition-colors w-full justify-between focus:outline-none"
-                 >
-                   <span>Specifications</span>
-                   {isDetailsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                 </button>
-                 
-                 <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isDetailsOpen ? 'max-h-48 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
-                    <ul className="space-y-2">
-                      {Object.entries(product.details).slice(0, 4).map(([key, value]) => (
-                        <li key={key} className="grid grid-cols-[70px_1fr] gap-2 text-xs">
-                           <span className="text-gray-400 font-light truncate" title={key}>{key}</span>
-                           <span className="text-emerald-950 font-medium truncate" title={value}>{value}</span>
-                        </li>
-                      ))}
-                    </ul>
-                 </div>
-              </div>
-            )}
-         </div>
+      {/* Info Area - Portfolio Style */}
+      <div className="flex flex-col text-center items-center">
+         <p className="text-[10px] uppercase tracking-[0.2em] text-gold-600 mb-2 font-bold">{product.category}</p>
+         <h3 className="font-display text-lg text-emerald-950 mb-4 group-hover:text-teal-600 transition-colors">
+            <Link to={`/product/${product.id}`}>{product.name}</Link>
+         </h3>
          
-         <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
-            <Link to={`/product/${product.id}`} className="flex items-baseline gap-3 group/price">
-                <span className="text-lg font-serif text-emerald-950 group-hover/price:text-gold-600 transition-colors">{product.price}</span>
-                {product.originalPrice && (
-                <span className="text-xs text-gray-400 line-through font-light">{product.originalPrice}</span>
-                )}
-            </Link>
-            <button 
-              onClick={handleAddToCart}
-              className="text-emerald-950 hover:text-gold-600 transition-colors p-2 -mr-2 relative group/btn" 
-              aria-label="Add to cart"
-            >
-                <ShoppingBag size={18} strokeWidth={1.5} />
-                <span className="absolute -top-8 -right-4 bg-emerald-950 text-white text-[9px] py-1 px-2 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">Add to Bag</span>
-            </button>
-         </div>
+         {/* Button */}
+         <button 
+            onClick={handleEnquire}
+            className="mt-auto px-6 py-3 border border-emerald-950/20 text-emerald-950 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-emerald-950 hover:text-white transition-all duration-300 flex items-center gap-2"
+         >
+             <MessageCircle size={14} /> Enquire on WhatsApp
+         </button>
       </div>
     </div>
   );
