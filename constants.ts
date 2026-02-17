@@ -2,8 +2,8 @@ import { Product, NavItem, BlogPost, Testimonial } from './types';
 
 export const BRAND_NAME = "D GRAND Jewellery";
 export const TAGLINE = "Premium Imitation Jewellery | Wholesale & Retail";
-export const PHONE_PRIMARY = "8086960473";
-export const PHONE_SECONDARY = "8086690473";
+export const PHONE_PRIMARY = "8086690473";
+export const PHONE_SECONDARY = "8086960473";
 export const EMAIL = "dgrandimitationjewellery@gmail.com";
 export const ADDRESS = "#104, R.B.D.G.T.C (JBR) Plaza, Near White Temple, Mamulpete, Bangalore – 560053";
 

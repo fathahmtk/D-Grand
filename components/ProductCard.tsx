@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Product } from '../types';
-import { ShoppingBag, ArrowRight, ChevronDown, ChevronUp, Heart } from 'lucide-react';
+import { ShoppingBag, ArrowRight, ChevronDown, ChevronUp, Heart, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FALLBACK_IMAGE } from '../constants';
 import { useShop } from '../context/ShopContext';
@@ -13,8 +13,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState(product.image);
   const [hasError, setHasError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   
-  const { addToCart, toggleWishlist, wishlist } = useShop();
+  const { addToCart, toggleWishlist, wishlist, openQuickView } = useShop();
   const isWishlisted = wishlist.includes(product.id);
 
   const handleError = () => {
@@ -35,12 +36,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     e.stopPropagation();
     toggleWishlist(product.id);
   };
+  
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openQuickView(product);
+  };
 
   return (
     <div className="group relative bg-white rounded-sm overflow-hidden h-full flex flex-col transition-shadow duration-500 hover:shadow-2xl hover:shadow-emerald-900/10">
       
       {/* Image Area - Arch Design */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-cream-50 mx-4 mt-4 rounded-t-[100px] rounded-b-md">
+      <div className="relative aspect-[4/5] overflow-hidden bg-cream-100 mx-4 mt-4 rounded-t-[100px] rounded-b-md">
         <div className="absolute top-4 right-4 z-20 flex gap-2">
             {product.tag && (
             <span className={`text-[10px] font-bold px-3 py-1 uppercase tracking-widest backdrop-blur-md ${
@@ -59,14 +66,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Heart size={14} fill={isWishlisted ? "currentColor" : "none"} />
         </button>
 
+        {/* Quick View Button - Appears on hover */}
+        <button
+          onClick={handleQuickView}
+          className="absolute top-14 left-4 z-20 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-emerald-950 transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 hover:bg-emerald-950 hover:text-white"
+          title="Quick View"
+        >
+           <Eye size={14} />
+        </button>
+
         {/* Main Link Overlay for Image */}
         <Link to={`/product/${product.id}`} className="absolute inset-0 z-10" aria-label={`View ${product.name}`} />
 
         <img
             src={imgSrc}
             alt={product.name}
+            loading="lazy"
+            onLoad={() => setIsLoaded(true)}
             onError={handleError}
-            className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
+            className={`w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105 ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
         />
         
         {/* Quick Action Overlay Visuals */}

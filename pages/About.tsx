@@ -1,7 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Section } from '../components/Section';
 import { Gem, Handshake, Palette, Users, Globe, Trophy } from 'lucide-react';
 import { FALLBACK_IMAGE } from '../constants';
+
+// Component for counting up animation
+const AnimatedCounter = ({ end, duration = 2000 }: { end: number, duration?: number }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTime: number | null = null;
+    let animationFrameId: number;
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      // Easing function: easeOutQuart
+      const easeProgress = 1 - Math.pow(1 - progress, 4);
+      
+      setCount(Math.floor(easeProgress * end));
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [end, duration]);
+
+  return <>{count.toLocaleString()}+</>;
+};
 
 const About: React.FC = () => {
   return (
@@ -74,21 +103,27 @@ const About: React.FC = () => {
                       <div className="flex justify-center mb-4 text-gold-400">
                           <Users size={32} strokeWidth={1} />
                       </div>
-                      <h3 className="font-serif text-4xl mb-2">5,000+</h3>
+                      <h3 className="font-serif text-4xl mb-2">
+                        <AnimatedCounter end={5000} duration={2500} />
+                      </h3>
                       <p className="text-[10px] uppercase tracking-[0.25em] text-emerald-200">Happy Customers</p>
                   </div>
                   <div className="p-4">
                       <div className="flex justify-center mb-4 text-gold-400">
                           <Trophy size={32} strokeWidth={1} />
                       </div>
-                      <h3 className="font-serif text-4xl mb-2">500+</h3>
+                      <h3 className="font-serif text-4xl mb-2">
+                        <AnimatedCounter end={500} duration={2000} />
+                      </h3>
                       <p className="text-[10px] uppercase tracking-[0.25em] text-emerald-200">Unique Designs</p>
                   </div>
                   <div className="p-4">
                       <div className="flex justify-center mb-4 text-gold-400">
                           <Globe size={32} strokeWidth={1} />
                       </div>
-                      <h3 className="font-serif text-4xl mb-2">15+</h3>
+                      <h3 className="font-serif text-4xl mb-2">
+                        <AnimatedCounter end={15} duration={1500} />
+                      </h3>
                       <p className="text-[10px] uppercase tracking-[0.25em] text-emerald-200">States Served</p>
                   </div>
               </div>

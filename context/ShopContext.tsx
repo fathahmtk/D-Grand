@@ -6,11 +6,14 @@ interface ShopContextType {
   wishlist: string[];
   isCartOpen: boolean;
   notification: string | null;
+  quickViewProduct: Product | null;
   addToCart: (product: Product) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, delta: number) => void;
   toggleCart: () => void;
   toggleWishlist: (productId: string) => void;
+  openQuickView: (product: Product) => void;
+  closeQuickView: () => void;
   cartTotal: number;
   cartCount: number;
   showNotification: (msg: string) => void;
@@ -31,6 +34,7 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   // Persistence
   useEffect(() => {
@@ -101,6 +105,9 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   };
 
+  const openQuickView = (product: Product) => setQuickViewProduct(product);
+  const closeQuickView = () => setQuickViewProduct(null);
+
   const cartTotal = cart.reduce((total, item) => {
     return total + (getPriceValue(item.price) * item.quantity);
   }, 0);
@@ -113,11 +120,14 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       wishlist,
       isCartOpen,
       notification,
+      quickViewProduct,
       addToCart,
       removeFromCart,
       updateQuantity,
       toggleCart,
       toggleWishlist,
+      openQuickView,
+      closeQuickView,
       cartTotal,
       cartCount,
       showNotification

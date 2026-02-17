@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Section } from '../components/Section';
 import { ADDRESS, PHONE_PRIMARY, PHONE_SECONDARY, EMAIL } from '../constants';
 import { MapPin, Phone, Mail, Clock, Send, Plus, Minus, MessageSquare } from 'lucide-react';
+import { useShop } from '../context/ShopContext';
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const Contact: React.FC = () => {
     message: ''
   });
 
+  const { showNotification } = useShop();
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -19,8 +21,13 @@ const Contact: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    showNotification("Redirecting to WhatsApp...");
     const text = `*General Enquiry from Website*%0A%0AName: ${formData.name}%0APhone: ${formData.phone}%0ASubject: ${formData.subject}%0AMessage: ${formData.message}`;
-    window.open(`https://wa.me/91${PHONE_PRIMARY}?text=${text}`, '_blank');
+    
+    // Small delay to let the user see the notification before the tab switch
+    setTimeout(() => {
+        window.open(`https://wa.me/91${PHONE_PRIMARY}?text=${text}`, '_blank');
+    }, 1000);
   };
 
   const FAQS = [

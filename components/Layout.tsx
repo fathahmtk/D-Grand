@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag, Heart } from 'lucide-react';
+import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag, Heart, ArrowUp } from 'lucide-react';
 import { Logo } from './Logo';
 import { NAV_ITEMS, WHATSAPP_LINK, PRODUCTS } from '../constants';
 import { Product } from '../types';
 import { useShop } from '../context/ShopContext';
 import { CartDrawer } from './CartDrawer';
+import { QuickView } from './QuickView';
 
 // Specific Header Navigation including Wholesale for business focus
 const HEADER_NAV_ITEMS = [
@@ -21,8 +22,10 @@ export const Layout: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [email, setEmail] = useState('');
+  const [showBackToTop, setShowBackToTop] = useState(false);
   
-  const { toggleCart, cartCount, notification, wishlist } = useShop();
+  const { toggleCart, cartCount, notification, showNotification, wishlist } = useShop();
   const wishlistCount = wishlist.length;
 
   const location = useLocation();
@@ -40,6 +43,7 @@ export const Layout: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
+      setShowBackToTop(window.scrollY > 500);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -77,17 +81,30 @@ export const Layout: React.FC = () => {
     }
   };
 
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      showNotification("Thank you for subscribing to D GRAND!");
+      setEmail('');
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans text-emerald-950 relative">
       {/* Toast Notification */}
       <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] transition-all duration-300 transform ${notification ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
-        <div className="bg-emerald-950 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3">
+        <div className="bg-emerald-950 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3 border border-gold-500/20">
           <ShoppingBag size={16} className="text-gold-400" />
           <span className="text-xs font-bold uppercase tracking-widest">{notification}</span>
         </div>
       </div>
 
       <CartDrawer />
+      <QuickView />
 
       {/* Header */}
       <header 
@@ -304,11 +321,11 @@ export const Layout: React.FC = () => {
 
       {/* Mobile Nav Overlay */}
       <div 
-        className={`md:hidden fixed inset-0 bg-emerald-950 z-[55] flex items-center justify-center transition-all duration-500 ${
+        className={`md:hidden fixed inset-0 bg-emerald-950 z-[55] flex flex-col items-center justify-center transition-all duration-500 ${
             isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible delay-300'
         }`}
       >
-        <nav className="flex flex-col space-y-8 text-center p-6 w-full">
+        <nav className="flex flex-col space-y-6 text-center p-6 w-full max-h-[80vh] overflow-y-auto">
           {HEADER_NAV_ITEMS.map((item) => (
             <NavLink
               key={item.label}
@@ -324,13 +341,19 @@ export const Layout: React.FC = () => {
               {item.label}
             </NavLink>
           ))}
-          <div className="w-12 h-[1px] bg-white/10 mx-auto my-4"></div>
+          <div className="w-12 h-[1px] bg-white/10 mx-auto my-2"></div>
           <Link to="/marketplaces" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">
             Marketplaces
           </Link>
           <Link to="/wishlist" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">
             Wishlist ({wishlistCount})
           </Link>
+          
+          <div className="flex justify-center gap-6 mt-8 pt-8 border-t border-white/5">
+             <a href="#" className="text-gold-400 hover:text-white transition-colors"><Instagram size={24} /></a>
+             <a href="#" className="text-gold-400 hover:text-white transition-colors"><Facebook size={24} /></a>
+             <a href="#" className="text-gold-400 hover:text-white transition-colors"><Twitter size={24} /></a>
+          </div>
         </nav>
       </div>
 
@@ -414,10 +437,16 @@ export const Layout: React.FC = () => {
            <div>
               <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Newsletter</h5>
               <p className="text-xs text-gray-400 mb-6 font-light leading-relaxed">Subscribe to receive updates, access to exclusive deals, and more.</p>
-              <div className="relative">
-                 <input type="email" placeholder="Email Address" className="w-full bg-white/5 border-b border-white/20 px-0 py-3 text-xs text-white focus:outline-none focus:border-gold-500 transition-colors placeholder:text-gray-600" />
-                 <button className="absolute right-0 top-0 h-full text-gold-500 text-[10px] font-bold uppercase hover:text-white transition-colors">Subscribe</button>
-              </div>
+              <form onSubmit={handleSubscribe} className="relative">
+                 <input 
+                    type="email" 
+                    placeholder="Email Address" 
+                    className="w-full bg-white/5 border-b border-white/20 px-0 py-3 text-xs text-white focus:outline-none focus:border-gold-500 transition-colors placeholder:text-gray-600" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                 />
+                 <button type="submit" className="absolute right-0 top-0 h-full text-gold-500 text-[10px] font-bold uppercase hover:text-white transition-colors">Subscribe</button>
+              </form>
            </div>
         </div>
 
@@ -429,16 +458,28 @@ export const Layout: React.FC = () => {
         </div>
       </footer>
 
-      {/* Floating WhatsApp */}
-      <a
-        href={WHATSAPP_LINK}
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-8 right-8 z-40 bg-[#25D366] text-white p-4 rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.3)] hover:scale-105 hover:shadow-[0_10px_30px_rgba(37,211,102,0.5)] transition-all duration-300 flex items-center justify-center group"
-        title="Chat on WhatsApp"
-      >
-        <MessageCircle size={28} className="fill-current" />
-      </a>
+      {/* Floating Buttons Group */}
+      <div className="fixed bottom-8 right-8 z-40 flex flex-col gap-4">
+          {/* Back to Top */}
+          <button 
+             onClick={scrollToTop}
+             className={`w-14 h-14 bg-white text-emerald-950 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:bg-gold-500 hover:text-white ${showBackToTop ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}
+             aria-label="Scroll to top"
+          >
+              <ArrowUp size={24} />
+          </button>
+
+          {/* WhatsApp */}
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noreferrer"
+            className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.3)] hover:scale-105 hover:shadow-[0_10px_30px_rgba(37,211,102,0.5)] transition-all duration-300 flex items-center justify-center group"
+            title="Chat on WhatsApp"
+          >
+            <MessageCircle size={28} className="fill-current" />
+          </a>
+      </div>
     </div>
   );
 };

@@ -223,7 +223,7 @@ const Wholesale: React.FC = () => {
                          </button>
                          <div 
                             className={`px-6 text-sm text-gray-500 font-light leading-relaxed transition-all duration-300 ease-in-out ${
-                                openFaqIndex === idx ? 'max-h-40 pb-6 opacity-100' : 'max-h-0 opacity-0'
+                                openFaqIndex === idx ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 opacity-0'
                             }`}
                          >
                              {faq.a}

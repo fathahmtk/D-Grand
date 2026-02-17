@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import { X, Plus, Minus, Trash2, ShoppingBag, MessageCircle, ArrowRight } from 'lucide-react';
 import { PHONE_PRIMARY } from '../constants';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 export const CartDrawer: React.FC = () => {
   const { isCartOpen, toggleCart, cart, removeFromCart, updateQuantity, cartTotal, cartCount } = useShop();
+  const [note, setNote] = useState('');
 
   if (!isCartOpen) return null;
 
@@ -15,7 +16,8 @@ export const CartDrawer: React.FC = () => {
     ).join('%0A');
 
     const totalStr = `Total Estimate: ₹${cartTotal.toLocaleString('en-IN')}`;
-    const text = `*Order Enquiry from Website*%0A%0AHi, I would like to place an order:%0A%0A${itemsList}%0A%0A${totalStr}%0A%0APlease confirm availability.`;
+    const noteStr = note.trim() ? `%0A%0A*Note:* ${note}` : '';
+    const text = `*Order Enquiry from Website*%0A%0AHi, I would like to place an order:%0A%0A${itemsList}%0A%0A${totalStr}${noteStr}%0A%0APlease confirm availability.`;
     
     window.open(`https://wa.me/91${PHONE_PRIMARY}?text=${text}`, '_blank');
   };
@@ -61,46 +63,59 @@ export const CartDrawer: React.FC = () => {
               </button>
             </div>
           ) : (
-            cart.map((item) => (
-              <div key={item.id} className="flex gap-4 bg-white p-4 rounded-sm border border-gray-100 shadow-sm">
-                <div className="w-20 h-24 flex-shrink-0 bg-gray-100 rounded-sm overflow-hidden">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-grow flex flex-col justify-between">
-                  <div>
-                    <div className="flex justify-between items-start">
-                      <h3 className="font-serif text-emerald-950 leading-tight pr-4">{item.name}</h3>
-                      <button 
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-gray-300 hover:text-red-500 transition-colors p-1"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                    <p className="text-xs text-gold-600 font-bold mt-1">{item.price}</p>
+            <>
+              {cart.map((item) => (
+                <div key={item.id} className="flex gap-4 bg-white p-4 rounded-sm border border-gray-100 shadow-sm">
+                  <div className="w-20 h-24 flex-shrink-0 bg-gray-100 rounded-sm overflow-hidden">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   </div>
-                  
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center border border-gray-200 rounded-sm">
-                      <button 
-                        onClick={() => updateQuantity(item.id, -1)}
-                        className="p-1.5 text-gray-500 hover:bg-gray-100 transition-colors"
-                        disabled={item.quantity <= 1}
-                      >
-                        <Minus size={14} />
-                      </button>
-                      <span className="w-8 text-center text-xs font-bold text-emerald-950">{item.quantity}</span>
-                      <button 
-                        onClick={() => updateQuantity(item.id, 1)}
-                        className="p-1.5 text-gray-500 hover:bg-gray-100 transition-colors"
-                      >
-                        <Plus size={14} />
-                      </button>
+                  <div className="flex-grow flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-serif text-emerald-950 leading-tight pr-4">{item.name}</h3>
+                        <button 
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-gray-300 hover:text-red-500 transition-colors p-1"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                      <p className="text-xs text-gold-600 font-bold mt-1">{item.price}</p>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center border border-gray-200 rounded-sm">
+                        <button 
+                          onClick={() => updateQuantity(item.id, -1)}
+                          className="p-1.5 text-gray-500 hover:bg-gray-100 transition-colors"
+                          disabled={item.quantity <= 1}
+                        >
+                          <Minus size={14} />
+                        </button>
+                        <span className="w-8 text-center text-xs font-bold text-emerald-950">{item.quantity}</span>
+                        <button 
+                          onClick={() => updateQuantity(item.id, 1)}
+                          className="p-1.5 text-gray-500 hover:bg-gray-100 transition-colors"
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+              ))}
+              
+              {/* Order Note */}
+              <div className="mt-6">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 block">Order Notes (Optional)</label>
+                <textarea 
+                   className="w-full bg-white border border-gray-200 rounded-sm p-3 text-sm text-emerald-950 focus:outline-none focus:border-gold-500 resize-none h-20 placeholder:text-gray-300"
+                   placeholder="E.g. Ring size, gift wrap request..."
+                   value={note}
+                   onChange={(e) => setNote(e.target.value)}
+                />
               </div>
-            ))
+            </>
           )}
         </div>
 
