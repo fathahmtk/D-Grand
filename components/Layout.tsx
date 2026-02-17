@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag, Heart, ArrowUp, ArrowRight } from 'lucide-react';
+import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight, ShoppingBag, Heart, ArrowUp, ArrowRight, ChevronDown } from 'lucide-react';
 import { Logo } from './Logo';
 import { NAV_ITEMS, WHATSAPP_LINK, PRODUCTS } from '../constants';
 import { Product } from '../types';
@@ -9,15 +9,6 @@ import { CartDrawer } from './CartDrawer';
 import { QuickView } from './QuickView';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const HEADER_NAV_ITEMS = [
-  { label: 'Home', path: '/' },
-  { label: 'Collections', path: '/collections' },
-  { label: 'Categories', path: '/collections' },
-  { label: 'Wholesale', path: '/wholesale' },
-  { label: 'About', path: '/about' },
-  { label: 'Contact', path: '/contact' },
-];
-
 export const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -25,6 +16,7 @@ export const Layout: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [email, setEmail] = useState('');
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   
   const { toggleCart, cartCount, notification, showNotification, wishlist } = useShop();
   const wishlistCount = wishlist.length;
@@ -38,6 +30,7 @@ export const Layout: React.FC = () => {
   useEffect(() => {
     setIsMenuOpen(false);
     setIsSearchOpen(false);
+    setHoveredNav(null);
   }, [location]);
 
   useEffect(() => {
@@ -54,7 +47,8 @@ export const Layout: React.FC = () => {
       const query = searchQuery.toLowerCase();
       const results = PRODUCTS.filter(p => 
         p.name.toLowerCase().includes(query) || 
-        p.category.toLowerCase().includes(query)
+        p.category.toLowerCase().includes(query) ||
+        p.subCategory?.toLowerCase().includes(query)
       );
       setSearchResults(results);
     } else {
@@ -118,6 +112,7 @@ export const Layout: React.FC = () => {
         className={`fixed top-0 left-0 w-full z-[60] transition-all duration-300 ${
           scrolled || !isHome ? 'bg-emerald-950/95 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-5'
         }`}
+        onMouseLeave={() => setHoveredNav(null)}
       >
         <div className="container mx-auto px-6 flex justify-between items-center">
           
@@ -133,21 +128,50 @@ export const Layout: React.FC = () => {
 
           <div className="hidden md:flex items-center gap-8 ml-auto">
             <nav className="flex items-center gap-6">
-              {HEADER_NAV_ITEMS.map((item) => (
-                <NavLink
-                  key={item.label}
-                  to={item.path}
-                  end={item.path === '/'}
-                  className={({ isActive }) =>
-                    `text-[10px] tracking-[0.2em] uppercase font-bold transition-all duration-300 relative group font-sans ${
-                      isActive 
-                        ? 'text-gold-400' 
-                        : 'text-white hover:text-gold-400'
-                    }`
-                  }
+              {NAV_ITEMS.map((item) => (
+                <div 
+                  key={item.label} 
+                  className="relative group"
+                  onMouseEnter={() => setHoveredNav(item.label)}
                 >
-                  {item.label}
-                </NavLink>
+                  <NavLink
+                    to={item.path || '#'}
+                    end={item.path === '/'}
+                    className={({ isActive }) =>
+                      `flex items-center gap-1 text-[10px] tracking-[0.2em] uppercase font-bold transition-all duration-300 relative font-sans ${
+                        isActive 
+                          ? 'text-gold-400' 
+                          : 'text-white hover:text-gold-400'
+                      }`
+                    }
+                  >
+                    {item.label}
+                    {item.children && <ChevronDown size={10} />}
+                  </NavLink>
+
+                  {/* Desktop Dropdown */}
+                  {item.children && hoveredNav === item.label && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-56 z-50"
+                    >
+                      <div className="bg-white rounded-none shadow-xl border-t-2 border-gold-500 py-2">
+                         <div className="flex flex-col">
+                            {item.children.map((child, idx) => (
+                                <Link 
+                                  key={idx} 
+                                  to={child.path}
+                                  className="px-6 py-3 text-xs text-emerald-950 hover:bg-cream-100 hover:text-teal-600 transition-colors border-b border-gray-50 last:border-0"
+                                >
+                                   {child.label}
+                                </Link>
+                            ))}
+                         </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               ))}
             </nav>
             
@@ -211,7 +235,7 @@ export const Layout: React.FC = () => {
         </div>
       </header>
 
-      {/* Search Overlay - Industrial Style */}
+      {/* Search Overlay */}
       <AnimatePresence>
         {isSearchOpen && (
             <motion.div 
@@ -281,31 +305,39 @@ export const Layout: React.FC = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="fixed inset-0 bg-emerald-950 z-[55] pt-24 px-6 flex flex-col"
+                className="fixed inset-0 bg-emerald-950 z-[55] pt-24 px-6 flex flex-col overflow-y-auto"
             >
-                <nav className="flex flex-col space-y-6">
-                {HEADER_NAV_ITEMS.map((item) => (
-                    <NavLink
-                    key={item.label}
-                    to={item.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={({ isActive }) =>
-                        `text-4xl font-display font-bold transition-colors ${
-                        isActive ? 'text-gold-400' : 'text-white/90'
-                        }`
-                    }
-                    >
-                    {item.label}
-                    </NavLink>
+                <nav className="flex flex-col space-y-4 pb-20">
+                {NAV_ITEMS.map((item) => (
+                    <div key={item.label}>
+                         <NavLink
+                            to={item.path || '#'}
+                            onClick={() => !item.children && setIsMenuOpen(false)}
+                            className={({ isActive }) =>
+                                `text-2xl font-display font-bold transition-colors block py-2 ${
+                                isActive ? 'text-gold-400' : 'text-white/90'
+                                }`
+                            }
+                        >
+                            {item.label}
+                        </NavLink>
+                        {item.children && (
+                            <div className="pl-4 border-l border-white/10 ml-2 space-y-2 mb-2">
+                                {item.children.map((child, idx) => (
+                                    <Link 
+                                        key={idx} 
+                                        to={child.path}
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="block text-sm text-white/70 py-1"
+                                    >
+                                        {child.label}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 ))}
                 </nav>
-                <div className="mt-auto pb-12">
-                    <div className="flex gap-6 mb-8">
-                        <Instagram className="text-gold-400" />
-                        <Facebook className="text-gold-400" />
-                    </div>
-                    <p className="text-emerald-500 text-xs">© D GRAND Jewellery</p>
-                </div>
             </motion.div>
         )}
       </AnimatePresence>
@@ -327,10 +359,10 @@ export const Layout: React.FC = () => {
                <div>
                   <h5 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gold-400">Collections</h5>
                   <ul className="space-y-4 text-xs text-gray-400 font-medium">
-                     <li><Link to="/collections" className="hover:text-white transition-colors">Bridal Sets</Link></li>
-                     <li><Link to="/collections" className="hover:text-white transition-colors">Temple Jewellery</Link></li>
-                     <li><Link to="/collections" className="hover:text-white transition-colors">Contemporary</Link></li>
-                     <li><Link to="/collections" className="hover:text-white transition-colors">Rose Gold</Link></li>
+                     <li><Link to="/collections?category=Bridal+Sets" className="hover:text-white transition-colors">Bridal Sets</Link></li>
+                     <li><Link to="/collections?category=Temple" className="hover:text-white transition-colors">Temple Jewellery</Link></li>
+                     <li><Link to="/collections?category=Bangles" className="hover:text-white transition-colors">Bangles</Link></li>
+                     <li><Link to="/collections?style=Rose+Gold" className="hover:text-white transition-colors">Rose Gold</Link></li>
                   </ul>
                </div>
 
