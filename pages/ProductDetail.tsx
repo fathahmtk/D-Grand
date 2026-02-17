@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Section } from '../components/Section';
 import { ProductCarousel } from '../components/ProductCarousel';
 import { PRODUCTS, PHONE_PRIMARY, FALLBACK_IMAGE } from '../constants';
-import { Star, ShieldCheck, Truck, MessageCircle, ExternalLink, ChevronRight, ChevronLeft, Share2, Heart } from 'lucide-react';
+import { Star, ShieldCheck, Truck, MessageCircle, ExternalLink, ChevronRight, ChevronLeft, Share2, Heart, ArrowRight } from 'lucide-react';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -290,7 +290,7 @@ const ProductDetail: React.FC = () => {
                         <h2 className="font-serif text-3xl md:text-4xl text-emerald-950 mt-2">Complete The Look</h2>
                     </div>
                     <Link to="/collections" className="group flex items-center gap-2 text-emerald-950 text-xs uppercase tracking-widest hover:text-gold-600 transition-colors">
-                        View All Collections <ArrowRightIcon />
+                        View All Collections <ArrowRight size={16} />
                     </Link>
                 </div>
                 <ProductCarousel products={relatedProducts} />
@@ -300,10 +300,5 @@ const ProductDetail: React.FC = () => {
     </div>
   );
 };
-
-// Simple arrow component to avoid extra imports if not needed, or just use Lucid
-const ArrowRightIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-)
 
 export default ProductDetail;

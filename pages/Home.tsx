@@ -81,34 +81,43 @@ const Home: React.FC = () => {
       </section>
 
       {/* 2. EDITORIAL CATEGORIES */}
-      <section className="bg-cream-50 py-32">
+      <section className="bg-cream-50 py-24 md:py-32">
         <div className="container mx-auto px-6">
-           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 border-b border-emerald-950/10 pb-6">
               <div>
                  <span className="text-gold-600 text-[10px] uppercase tracking-[0.25em] font-bold">Collections</span>
                  <h2 className="font-serif text-4xl text-emerald-950 mt-3">Shop By Category</h2>
               </div>
-              <Link to="/collections" className="text-emerald-950 text-xs uppercase tracking-[0.2em] border-b border-emerald-950/30 pb-1 hover:text-gold-600 hover:border-gold-600 transition-colors flex items-center gap-2">
-                 View All Categories <ArrowRight size={14} />
+              <Link to="/collections" className="text-emerald-950 text-xs uppercase tracking-[0.2em] hover:text-gold-600 transition-colors flex items-center gap-2 group">
+                 View All Categories <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+           {/* Flexible Grid for 5 items: Centered on larger screens */}
+           <div className="flex flex-wrap justify-center gap-6 md:gap-8">
               {CATEGORY_IMAGES.map((cat, idx) => (
-                <Link to="/collections" key={idx} className="group relative h-[500px] overflow-hidden rounded-sm">
+                <Link 
+                    to="/collections" 
+                    key={idx} 
+                    className="group relative block w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-2rem)] aspect-square overflow-hidden rounded-sm cursor-pointer shadow-lg hover:shadow-2xl hover:shadow-gold-500/10 transition-all duration-500"
+                >
+                   {/* Background Image */}
                    <img 
                     src={cat.img} 
                     alt={cat.name} 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                    className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110" 
                     onError={handleImageError}
                    />
-                   <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/90 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
                    
-                   <div className="absolute bottom-0 left-0 w-full p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <h3 className="font-serif text-3xl text-white mb-2">{cat.name}</h3>
-                      <p className="text-white/70 text-sm font-light opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                         Explore our latest designs tailored for the modern woman.
-                      </p>
+                   {/* Gradient Overlay */}
+                   <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/90 via-emerald-950/10 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500"></div>
+                   
+                   {/* Gold Border Effect */}
+                   <div className="absolute inset-4 border border-white/20 group-hover:border-gold-500/70 transition-all duration-500 scale-95 group-hover:scale-100 z-10"></div>
+
+                   {/* Text Content */}
+                   <div className="absolute bottom-0 left-0 w-full p-6 text-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 z-20">
+                      <h3 className="font-serif text-2xl md:text-3xl text-white tracking-wide group-hover:text-gold-300 transition-colors drop-shadow-md">{cat.name}</h3>
                    </div>
                 </Link>
               ))}

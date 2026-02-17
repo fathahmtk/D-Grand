@@ -1,26 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, useLocation, Link } from 'react-router-dom';
-import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle } from 'lucide-react';
+import { NavLink, Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
+import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle, Search, ChevronRight } from 'lucide-react';
 import { Logo } from './Logo';
-import { NAV_ITEMS, WHATSAPP_LINK } from '../constants';
+import { NAV_ITEMS, WHATSAPP_LINK, PRODUCTS } from '../constants';
+import { Product } from '../types';
 
-// Specific Header Navigation as requested
+// Specific Header Navigation including Wholesale for business focus
 const HEADER_NAV_ITEMS = [
   { label: 'Home', path: '/' },
   { label: 'Collections', path: '/collections' },
+  { label: 'Wholesale', path: '/wholesale' },
   { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
 ];
 
 export const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  
   const location = useLocation();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const isHome = location.pathname === '/';
 
-  // Close menu on route change
+  // Close menu & search on route change
   useEffect(() => {
     setIsMenuOpen(false);
+    setIsSearchOpen(false);
   }, [location]);
 
   // Handle scroll effect
@@ -32,15 +40,41 @@ export const Layout: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handle Search Logic
+  useEffect(() => {
+    if (searchQuery.trim().length > 1) {
+      const query = searchQuery.toLowerCase();
+      const results = PRODUCTS.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        p.category.toLowerCase().includes(query)
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
+
+  // Lock body scroll when overlays are open
+  useEffect(() => {
+    if (isMenuOpen || isSearchOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isMenuOpen, isSearchOpen]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchResults.length > 0) {
+      navigate(`/product/${searchResults[0].id}`);
+      setIsSearchOpen(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans text-emerald-950 relative">
-      {/* 
-        Header Redesign:
-        - Deep Emerald Green (#0F3B2E / bg-emerald-950)
-        - Reduced Height (py-3)
-        - Sticky/Fixed
-        - Logo Left, Nav Right
-      */}
+      {/* Header */}
       <header 
         className={`fixed top-0 left-0 w-full z-[60] bg-emerald-950 transition-all duration-300 shadow-md ${
           scrolled ? 'py-2' : 'py-3'
@@ -60,40 +94,143 @@ export const Layout: React.FC = () => {
           </div>
 
           {/* Desktop Nav - Aligned Right */}
-          <nav className="hidden md:flex items-center gap-8 ml-auto">
-            {HEADER_NAV_ITEMS.map((item) => (
-              <NavLink
-                key={item.label}
-                to={item.path}
-                end={item.path === '/'}
-                className={({ isActive }) =>
-                  `text-xs tracking-[0.2em] uppercase font-bold transition-all duration-300 relative group ${
-                    isActive 
-                      ? 'text-gold-400' 
-                      : 'text-white hover:text-gold-400'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    {item.label}
-                    <span className={`absolute -bottom-2 left-0 w-full h-[1px] bg-gold-400 transform origin-left transition-transform duration-300 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
-                  </>
-                )}
-              </NavLink>
-            ))}
-          </nav>
+          <div className="hidden md:flex items-center gap-8 ml-auto">
+            <nav className="flex items-center gap-8">
+              {HEADER_NAV_ITEMS.map((item) => (
+                <NavLink
+                  key={item.label}
+                  to={item.path}
+                  end={item.path === '/'}
+                  className={({ isActive }) =>
+                    `text-xs tracking-[0.2em] uppercase font-bold transition-all duration-300 relative group ${
+                      isActive 
+                        ? 'text-gold-400' 
+                        : 'text-white hover:text-gold-400'
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      {item.label}
+                      <span className={`absolute -bottom-2 left-0 w-full h-[1px] bg-gold-400 transform origin-left transition-transform duration-300 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </nav>
+            
+            {/* Search Icon Desktop */}
+            <button 
+                onClick={() => setIsSearchOpen(true)}
+                className="text-white hover:text-gold-400 transition-colors ml-4"
+                aria-label="Open Search"
+            >
+                <Search size={20} />
+            </button>
+          </div>
 
-          {/* Mobile Menu Button - Right aligned */}
-          <button
-            className="md:hidden text-gold-400 p-2 z-[60] hover:text-white transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Actions - Right aligned */}
+          <div className="md:hidden flex items-center gap-4 z-[60]">
+            <button 
+                onClick={() => setIsSearchOpen(true)}
+                className="text-gold-400 hover:text-white transition-colors"
+            >
+                <Search size={22} />
+            </button>
+            <button
+                className="text-gold-400 p-1 hover:text-white transition-colors"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Toggle menu"
+            >
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </header>
+
+      {/* Search Overlay */}
+      {isSearchOpen && (
+        <div className="fixed inset-0 bg-emerald-950/98 z-[70] backdrop-blur-md animate-fade-in flex flex-col">
+           {/* Search Header */}
+           <div className="container mx-auto px-6 py-6 flex justify-end">
+              <button 
+                onClick={() => setIsSearchOpen(false)} 
+                className="group flex items-center gap-2 text-gold-400/70 hover:text-gold-400 transition-colors text-xs uppercase tracking-widest font-bold"
+              >
+                  Close <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+              </button>
+           </div>
+           
+           <div className="flex-grow overflow-y-auto">
+             <div className="container mx-auto px-6 max-w-4xl pt-10 pb-20">
+                 {/* Input */}
+                 <form onSubmit={handleSearchSubmit} className="relative mb-16 group">
+                     <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-gold-500/50 group-focus-within:text-gold-500 transition-colors" size={32} />
+                     <input 
+                       type="text" 
+                       autoFocus
+                       placeholder="Search products..." 
+                       className="w-full bg-transparent text-3xl md:text-5xl font-serif text-white py-6 pl-16 pr-4 border-b-2 border-white/10 focus:border-gold-500 focus:outline-none placeholder:text-white/10 transition-all"
+                       value={searchQuery}
+                       onChange={(e) => setSearchQuery(e.target.value)}
+                     />
+                 </form>
+
+                 {/* Results */}
+                 {searchQuery.length > 1 && (
+                     <div className="animate-fade-in-up">
+                        <h3 className="text-gold-400 text-xs uppercase tracking-[0.2em] mb-8 font-bold">
+                            {searchResults.length} Result{searchResults.length !== 1 && 's'} Found
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {searchResults.map(product => (
+                                <Link 
+                                  key={product.id} 
+                                  to={`/product/${product.id}`}
+                                  onClick={() => setIsSearchOpen(false)}
+                                  className="flex items-center gap-6 p-4 rounded-md bg-white/5 hover:bg-white/10 transition-all border border-transparent hover:border-gold-500/30 group"
+                                >
+                                    <div className="w-20 h-20 bg-emerald-900 rounded-sm overflow-hidden flex-shrink-0">
+                                        <img src={product.image} alt={product.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <p className="text-[10px] text-gold-400/70 uppercase tracking-widest mb-1 group-hover:text-gold-400">{product.category}</p>
+                                        <h4 className="text-xl font-serif text-white group-hover:text-gold-200 transition-colors">{product.name}</h4>
+                                        <p className="text-sm text-gray-400 mt-1 font-light">{product.price}</p>
+                                    </div>
+                                    <ChevronRight className="text-white/20 group-hover:text-gold-500 transition-colors transform group-hover:translate-x-1" />
+                                </Link>
+                            ))}
+                        </div>
+                        {searchResults.length === 0 && (
+                            <div className="text-center py-12 border border-white/5 rounded-lg bg-white/5">
+                                <p className="text-white/40 text-lg font-serif italic">No treasures found matching "{searchQuery}"</p>
+                            </div>
+                        )}
+                     </div>
+                 )}
+                 
+                 {/* Suggestions when empty */}
+                 {searchQuery.length <= 1 && (
+                     <div className="text-center md:text-left animate-fade-in-up">
+                         <h3 className="text-white/30 text-xs uppercase tracking-[0.2em] mb-6 font-bold">Popular Categories</h3>
+                         <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                            {['Necklaces', 'Bridal Sets', 'Earrings', 'Temple'].map(tag => (
+                                <button 
+                                    key={tag}
+                                    onClick={() => setSearchQuery(tag)}
+                                    className="px-6 py-3 border border-white/10 rounded-full text-white/60 hover:text-emerald-950 hover:bg-gold-500 hover:border-gold-500 transition-all text-sm uppercase tracking-wider"
+                                >
+                                    {tag}
+                                </button>
+                            ))}
+                         </div>
+                     </div>
+                 )}
+             </div>
+           </div>
+        </div>
+      )}
 
       {/* Mobile Nav Overlay */}
       <div 
@@ -109,7 +246,7 @@ export const Layout: React.FC = () => {
               end={item.path === '/'}
               onClick={() => setIsMenuOpen(false)}
               className={({ isActive }) =>
-                `text-2xl font-serif tracking-wide transition-colors duration-300 ${
+                `text-3xl font-serif tracking-wide transition-colors duration-300 ${
                   isActive ? 'text-gold-400' : 'text-emerald-100 hover:text-white'
                 }`
               }
@@ -117,9 +254,10 @@ export const Layout: React.FC = () => {
               {item.label}
             </NavLink>
           ))}
-          {/* Add extra important links for mobile accessibility */}
-           <div className="w-12 h-[1px] bg-white/10 mx-auto my-4"></div>
-           <NavLink to="/wholesale" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">Wholesale</NavLink>
+          <div className="w-12 h-[1px] bg-white/10 mx-auto my-4"></div>
+          <Link to="/marketplaces" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">
+            Marketplaces
+          </Link>
         </nav>
       </div>
 
@@ -128,7 +266,7 @@ export const Layout: React.FC = () => {
         <Outlet />
       </main>
 
-      {/* Footer - Keeps full navigation from constants */}
+      {/* Footer */}
       <footer className="bg-emerald-950 text-white border-t border-gold-500/10">
         
         {/* Top Info Section */}
