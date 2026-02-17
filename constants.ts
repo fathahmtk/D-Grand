@@ -24,11 +24,11 @@ export const NAV_ITEMS: NavItem[] = [
 export const HERO_SLIDES = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?q=80&w=1920&auto=format&fit=crop", // Gold Necklaces Display
-    title: "Elegant Artificial Jewellery Collection",
-    subtitle: "Premium Imitation Jewellery | Wholesale & Retail",
-    cta: "Shop on Amazon",
-    link: "/marketplaces"
+    image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1920&auto=format&fit=crop", // Emerald Choker
+    title: "Imperial Emerald & Gold",
+    subtitle: "Timeless Elegance | Handcrafted Perfection",
+    cta: "Shop The Collection",
+    link: "/collections"
   },
   {
     id: 2,

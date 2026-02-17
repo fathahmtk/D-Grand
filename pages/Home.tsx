@@ -1,9 +1,14 @@
 import React from 'react';
 import { ProductCarousel } from '../components/ProductCarousel';
 import { Testimonials } from '../components/Testimonials';
-import { PRODUCTS, BLOG_POSTS, INSTAGRAM_IMAGES, TESTIMONIALS, CATEGORY_IMAGES, HERO_SLIDES, FALLBACK_IMAGE } from '../constants';
-import { ArrowRight, Gem, ShieldCheck, ChevronRight } from 'lucide-react';
+import { PRODUCTS, BLOG_POSTS, INSTAGRAM_IMAGES, TESTIMONIALS, CATEGORY_IMAGES, HERO_SLIDES, FALLBACK_IMAGE, WHATSAPP_LINK } from '../constants';
+import { ArrowRight, Gem, ShieldCheck, ChevronRight, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+// Simple Icon component for the Insta section
+const InstagramIcon = () => (
+   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+);
 
 const Home: React.FC = () => {
   const trendingProducts = PRODUCTS.slice(0, 6);
@@ -18,48 +23,60 @@ const Home: React.FC = () => {
   return (
     <div className="overflow-hidden">
       
-      {/* 1. HERO SECTION - Strictly Left Aligned with 60px Padding */}
-      <section className="relative h-screen min-h-[600px] w-full overflow-hidden bg-emerald-950 flex items-center pl-6 md:pl-[60px]">
+      {/* 1. HERO SECTION - Updated per request */}
+      <section className="relative h-screen min-h-[700px] w-full overflow-hidden bg-emerald-950 flex items-center justify-center md:justify-start">
         
-        {/* Background Image */}
+        {/* Background Image - Full width/height cover */}
         <div className="absolute inset-0 w-full h-full">
             <img 
                 src={HERO_SLIDES[0].image} 
                 alt="D GRAND Jewellery Hero" 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover" 
                 onError={handleImageError}
             />
         </div>
         
-        {/* Overlays for luxury feel & readability - Adjusted for richer background */}
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-950/40 to-transparent"></div>
+        {/* Dark Emerald Overlay - Enhanced for text visibility */}
+        <div className="absolute inset-0 bg-emerald-950/80 mix-blend-multiply"></div>
+        {/* Gradient for extra contrast on the left side */}
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950 via-emerald-950/60 to-transparent"></div>
         
-        {/* Content Container - No 'container' class, strictly padded */}
-        <div className="relative z-10 max-w-5xl text-white animate-fade-in-up text-left pt-20">
+        {/* Soft Gold Spotlight Effect */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-400/10 blur-[120px] rounded-full mix-blend-overlay pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+
+        {/* Content Container - Vertically Centered */}
+        <div className="relative z-10 w-full px-6 md:px-24">
+            <div className="max-w-4xl text-left animate-fade-in-up">
               
-              {/* Subheading */}
-              <div className="flex items-center gap-6 mb-8">
-                 <div className="h-[1px] w-16 bg-gold-400/80"></div>
-                 <h2 className="text-gold-300 text-xs md:text-sm font-bold uppercase tracking-[0.35em] drop-shadow-sm font-sans">
-                    Premium Imitation Jewellery | Wholesale & Retail
+              {/* Subtext */}
+              <div className="flex items-center gap-4 mb-6">
+                 <div className="h-[2px] w-12 bg-gold-500"></div>
+                 <h2 className="text-gold-300 text-[10px] md:text-sm font-bold uppercase tracking-[0.3em] font-sans">
+                    Premium Designs | Wholesale & Retail | Bangalore
                  </h2>
               </div>
 
               {/* Main Heading */}
-              <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-6 text-white drop-shadow-2xl">
-                <span className="block font-light tracking-wide">Elegant Artificial</span>
-                <span className="block italic font-normal text-cream-50">Jewellery Collection</span>
+              <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-8 text-white drop-shadow-lg">
+                <span className="block">Timeless Imitation</span>
+                <span className="block text-gold-200 italic font-light">
+                    Jewellery Collection
+                </span>
               </h1>
               
-              <div className="mt-10 flex flex-wrap gap-4 opacity-0 animate-[fadeInUp_1.2s_cubic-bezier(0.16,1,0.3,1)_0.3s_forwards]">
-                  <Link to="/collections" className="bg-white text-emerald-950 px-10 py-4 text-[11px] font-bold uppercase tracking-[0.25em] hover:bg-gold-500 hover:text-white transition-all duration-300 border border-white">
-                    Shop Now
+              {/* Buttons */}
+              <div className="flex flex-wrap gap-6 mt-10 opacity-0 animate-[fadeInUp_1.2s_cubic-bezier(0.16,1,0.3,1)_0.2s_forwards]">
+                  <Link to="/collections" className="group relative px-10 py-5 bg-transparent border border-gold-400 text-gold-100 text-xs font-bold uppercase tracking-[0.25em] hover:bg-gold-500 hover:text-emerald-950 hover:border-gold-500 transition-all duration-500 overflow-hidden">
+                    <span className="relative z-10">View Collections</span>
+                    <div className="absolute inset-0 bg-gold-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                   </Link>
-                  <Link to="/wholesale" className="bg-transparent border border-white/30 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.25em] hover:bg-white hover:text-emerald-950 transition-all duration-300 backdrop-blur-sm">
-                    Wholesale
-                  </Link>
+                  <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="flex items-center gap-3 px-6 py-5 text-white/90 text-xs font-bold uppercase tracking-[0.25em] hover:text-gold-400 transition-colors group">
+                    <MessageCircle size={18} className="text-gold-400" />
+                    <span>Enquire on WhatsApp</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                  </a>
               </div>
+            </div>
         </div>
       </section>
 
@@ -297,10 +314,5 @@ const Home: React.FC = () => {
     </div>
   );
 };
-
-// Simple Icon component for the Insta section
-const InstagramIcon = () => (
-   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-);
 
 export default Home;

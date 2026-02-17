@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Section } from '../components/Section';
 import { WholesaleForm } from '../types';
 import { PHONE_PRIMARY, FALLBACK_IMAGE } from '../constants';
-import { Send, CheckCircle } from 'lucide-react';
+import { Send, CheckCircle, TrendingUp, Package, Shield } from 'lucide-react';
 
 const Wholesale: React.FC = () => {
   const [formData, setFormData] = useState<WholesaleForm>({
@@ -24,7 +24,7 @@ const Wholesale: React.FC = () => {
   };
 
   const InputField = ({ label, name, type = "text", placeholder, required = true }: any) => (
-    <div className="relative group">
+    <div className="relative group z-0 w-full mb-6 group">
       <input 
         type={type} 
         name={name} 
@@ -32,9 +32,9 @@ const Wholesale: React.FC = () => {
         value={formData[name as keyof WholesaleForm]}
         onChange={handleChange}
         placeholder=" "
-        className="block w-full px-0 py-3 bg-transparent border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gold-500 peer transition-colors text-emerald-950"
+        className="block py-3 px-0 w-full text-sm text-emerald-950 bg-transparent border-0 border-b border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gold-500 peer transition-colors"
       />
-      <label className="absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gold-600 peer-focus:dark:text-gold-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-medium tracking-wide uppercase text-xs">
+      <label className="peer-focus:font-medium absolute text-xs text-gray-400 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gold-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 uppercase tracking-widest">
         {label}
       </label>
     </div>
@@ -42,107 +42,116 @@ const Wholesale: React.FC = () => {
 
   return (
     <>
-       <div className="bg-emerald-950 text-white py-20 text-center relative">
-         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-10"></div>
-        <div className="relative z-10">
-          <h1 className="font-serif text-4xl md:text-6xl mb-4">Wholesale Partner Program</h1>
-          <p className="text-gold-400 uppercase tracking-[0.2em] text-xs font-medium">Grow your business with D GRAND</p>
+       <div className="bg-emerald-950 text-white pt-32 pb-20 text-center relative overflow-hidden">
+         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+         <div className="absolute inset-0 bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950 opacity-50"></div>
+         
+        <div className="relative z-10 container mx-auto px-6">
+          <span className="text-gold-400 uppercase tracking-[0.3em] text-[10px] font-bold mb-4 block animate-fade-in-up">B2B Partnership</span>
+          <h1 className="font-serif text-4xl md:text-6xl mb-6 leading-tight animate-fade-in-up" style={{ animationDelay: '0.1s' }}>Wholesale Program</h1>
+          <p className="text-emerald-100/70 max-w-lg mx-auto text-sm font-light leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            Join our exclusive network of retailers and boutiques. Access premium designs at factory-direct pricing.
+          </p>
         </div>
       </div>
 
-      <Section background="white">
-        <div className="max-w-5xl mx-auto bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col md:flex-row overflow-hidden">
-          
-          {/* Info Side */}
-          <div className="bg-emerald-950 p-12 text-white md:w-2/5 flex flex-col justify-between relative overflow-hidden">
-            {/* Background Image Overlay */}
-             <div className="absolute inset-0 z-0 opacity-20">
-                <img 
-                    src="https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=800&auto=format&fit=crop" 
-                    className="w-full h-full object-cover" 
-                    alt="Background" 
-                    onError={(e) => e.currentTarget.src = FALLBACK_IMAGE}
-                />
-             </div>
-             <div className="absolute inset-0 bg-emerald-950/80 z-0"></div>
-
-            <div className="relative z-10">
-              <h3 className="font-serif text-3xl mb-8 text-white">Why Partner With Us?</h3>
-              <ul className="space-y-8">
-                <li className="flex gap-5 group">
-                   <div className="mt-1">
-                      <CheckCircle size={20} className="text-gold-500" />
-                   </div>
-                   <div>
-                     <h4 className="font-bold text-lg mb-1 group-hover:text-gold-400 transition-colors">Direct Factory Rates</h4>
-                     <p className="text-emerald-100/60 text-sm font-light">Best margins in the industry with our factory-direct pricing.</p>
-                   </div>
-                </li>
-                <li className="flex gap-5 group">
-                   <div className="mt-1">
-                      <CheckCircle size={20} className="text-gold-500" />
-                   </div>
-                   <div>
-                     <h4 className="font-bold text-lg mb-1 group-hover:text-gold-400 transition-colors">Trendsetting Designs</h4>
-                     <p className="text-emerald-100/60 text-sm font-light">Weekly catalog updates with trending designs from Bangalore.</p>
-                   </div>
-                </li>
-                <li className="flex gap-5 group">
-                   <div className="mt-1">
-                      <CheckCircle size={20} className="text-gold-500" />
-                   </div>
-                   <div>
-                     <h4 className="font-bold text-lg mb-1 group-hover:text-gold-400 transition-colors">Flexible MOQ</h4>
-                     <p className="text-emerald-100/60 text-sm font-light">Start small and scale big. We support businesses of all sizes.</p>
-                   </div>
-                </li>
-              </ul>
-            </div>
+      <Section background="white" className="relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] rounded-sm overflow-hidden bg-white">
             
-            <div className="mt-12 pt-8 border-t border-emerald-800 relative z-10">
-               <p className="text-xs uppercase tracking-widest text-emerald-400 mb-2">Support</p>
-               <p className="font-serif text-xl">+91 {PHONE_PRIMARY}</p>
+            {/* Left Side - Visual & Benefits */}
+            <div className="lg:w-5/12 bg-emerald-950 relative text-white p-12 flex flex-col justify-between overflow-hidden">
+               {/* Background Image */}
+               <div className="absolute inset-0 opacity-30">
+                  <img 
+                    src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?q=80&w=800&auto=format&fit=crop" 
+                    className="w-full h-full object-cover"
+                    alt="Jewellery Background"
+                  />
+               </div>
+               <div className="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/80 to-emerald-900/50"></div>
+
+               <div className="relative z-10">
+                  <h3 className="font-serif text-3xl mb-12">Partnership Benefits</h3>
+                  <div className="space-y-10">
+                      <div className="flex gap-5">
+                          <div className="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center flex-shrink-0 text-gold-400 border border-gold-500/20">
+                             <TrendingUp size={20} />
+                          </div>
+                          <div>
+                              <h4 className="font-serif text-lg mb-2 text-gold-200">High Margins</h4>
+                              <p className="text-emerald-100/60 text-xs leading-relaxed">Competitive factory-direct pricing ensuring excellent profitability for your business.</p>
+                          </div>
+                      </div>
+                      <div className="flex gap-5">
+                          <div className="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center flex-shrink-0 text-gold-400 border border-gold-500/20">
+                             <Package size={20} />
+                          </div>
+                          <div>
+                              <h4 className="font-serif text-lg mb-2 text-gold-200">Low MOQ</h4>
+                              <p className="text-emerald-100/60 text-xs leading-relaxed">Start small with our flexible Minimum Order Quantity and scale as you grow.</p>
+                          </div>
+                      </div>
+                      <div className="flex gap-5">
+                          <div className="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center flex-shrink-0 text-gold-400 border border-gold-500/20">
+                             <Shield size={20} />
+                          </div>
+                          <div>
+                              <h4 className="font-serif text-lg mb-2 text-gold-200">Quality Assurance</h4>
+                              <p className="text-emerald-100/60 text-xs leading-relaxed">Every piece undergoes a 3-step quality check before dispatch.</p>
+                          </div>
+                      </div>
+                  </div>
+               </div>
+               
+               <div className="relative z-10 mt-12 pt-8 border-t border-emerald-800/50">
+                  <p className="text-[10px] uppercase tracking-widest text-emerald-400 mb-2">Have questions?</p>
+                  <p className="font-serif text-xl text-white">+91 {PHONE_PRIMARY}</p>
+               </div>
             </div>
-          </div>
 
-          {/* Form Side */}
-          <div className="p-12 md:w-3/5 bg-white">
-            <div className="mb-10">
-              <h3 className="font-serif text-3xl text-emerald-950 mb-2">Send Enquiry</h3>
-              <p className="text-gray-500 text-sm">Fill out the form below to receive our latest catalog via WhatsApp.</p>
+            {/* Right Side - Form */}
+            <div className="lg:w-7/12 p-12 lg:p-16 bg-white">
+                <div className="mb-10">
+                    <span className="text-gold-600 text-[10px] uppercase tracking-widest font-bold">Application</span>
+                    <h2 className="font-serif text-3xl text-emerald-950 mt-2">Become a Partner</h2>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                        <InputField label="Contact Name" name="name" placeholder="John Doe" />
+                        <InputField label="Business Name" name="businessName" placeholder="Grand Boutique" />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                        <InputField label="WhatsApp Number" name="phone" type="tel" placeholder="9876543210" />
+                        <InputField label="City / Location" name="city" placeholder="Bangalore" />
+                    </div>
+
+                    <div className="relative group z-0 w-full mb-6 group">
+                        <textarea 
+                        name="requirement" 
+                        required
+                        value={formData.requirement}
+                        onChange={handleChange}
+                        placeholder=" "
+                        className="block py-3 px-0 w-full text-sm text-emerald-950 bg-transparent border-0 border-b border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gold-500 peer transition-colors h-24 resize-none"
+                        ></textarea>
+                        <label className="peer-focus:font-medium absolute text-xs text-gray-400 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gold-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 uppercase tracking-widest">
+                        Business Requirement
+                        </label>
+                    </div>
+
+                    <div className="pt-6">
+                        <button type="submit" className="group w-full md:w-auto px-10 py-4 bg-emerald-950 text-white font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-gold-500 hover:text-emerald-950 transition-all duration-300 flex items-center justify-center gap-3 shadow-xl">
+                            <span>Submit Enquiry</span>
+                            <Send size={14} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    </div>
+                </form>
             </div>
-            
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <InputField label="Your Name" name="name" placeholder="John Doe" />
-              <InputField label="Business Name" name="businessName" placeholder="JD Boutique" />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                 <InputField label="WhatsApp Number" name="phone" type="tel" placeholder="9876543210" />
-                 <InputField label="City" name="city" placeholder="Bangalore" />
-              </div>
-
-              <div className="relative group">
-                <textarea 
-                  name="requirement" 
-                  required
-                  value={formData.requirement}
-                  onChange={handleChange}
-                  placeholder=" "
-                  className="block w-full px-0 py-3 bg-transparent border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gold-500 peer transition-colors text-emerald-950 h-24 resize-none"
-                ></textarea>
-                <label className="absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gold-600 peer-focus:dark:text-gold-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-medium tracking-wide uppercase text-xs">
-                  Requirement Details
-                </label>
-              </div>
-
-              <div className="pt-4">
-                <button type="submit" className="w-full bg-emerald-950 text-white py-4 font-bold uppercase tracking-[0.2em] hover:bg-gold-500 hover:text-emerald-950 transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-xs">
-                  <Send size={16} /> Send Request
-                </button>
-              </div>
-            </form>
           </div>
-
         </div>
       </Section>
     </>

@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Section } from '../components/Section';
 import { ProductCarousel } from '../components/ProductCarousel';
 import { PRODUCTS, PHONE_PRIMARY, FALLBACK_IMAGE } from '../constants';
-import { Star, ShieldCheck, Truck, RotateCcw, MessageCircle, ExternalLink, ChevronRight } from 'lucide-react';
+import { Star, ShieldCheck, Truck, MessageCircle, ExternalLink, ChevronRight, ChevronLeft, Share2, Heart } from 'lucide-react';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeImage, setActiveImage] = useState<string>('');
+  const scrollRef = useRef<HTMLDivElement>(null);
   
   // Zoom state
   const [isZoomed, setIsZoomed] = useState(false);
@@ -17,13 +18,24 @@ const ProductDetail: React.FC = () => {
   const product = PRODUCTS.find(p => p.id === id);
   const relatedProducts = PRODUCTS.filter(p => p.category === product?.category && p.id !== product?.id).slice(0, 4);
 
-  // Set initial active image and dynamic title
+  const DUMMY_GALLERY = [
+      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1626784215021-2e39ccf971cd?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=800"
+  ];
+
+  const galleryImages = product ? [
+    product.image,
+    ...(product.images && product.images.length > 0 ? product.images : DUMMY_GALLERY)
+  ] : [];
+
   useEffect(() => {
     if (product) {
         setActiveImage(product.image);
         document.title = `${product.name} | D GRAND Jewellery`;
     }
-    // Scroll to top
     window.scrollTo(0, 0);
 
     return () => {
@@ -33,17 +45,13 @@ const ProductDetail: React.FC = () => {
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = FALLBACK_IMAGE;
-    // Also update active image state if the main image fails to prevent loop if thumbnail click logic reused it
-    if (activeImage === product?.image) {
-       // Optional: We can choose to not update state, just the DOM src
-    }
   };
 
   if (!product) {
     return (
-        <div className="h-[50vh] flex flex-col items-center justify-center">
+        <div className="h-screen flex flex-col items-center justify-center bg-cream-50">
             <h2 className="font-serif text-3xl text-emerald-950 mb-4">Product Not Found</h2>
-            <button onClick={() => navigate('/collections')} className="text-gold-600 underline hover:text-gold-500">Back to Collections</button>
+            <button onClick={() => navigate('/collections')} className="px-8 py-3 bg-emerald-950 text-white uppercase tracking-widest text-xs hover:bg-gold-500 hover:text-emerald-950 transition-all">Back to Collections</button>
         </div>
     );
   }
@@ -61,24 +69,35 @@ const ProductDetail: React.FC = () => {
     setMousePosition({ x, y });
   };
 
+  const scrollThumbnails = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+        const scrollAmount = 100;
+        const currentScroll = scrollRef.current.scrollLeft;
+        const targetScroll = direction === 'left' ? currentScroll - scrollAmount : currentScroll + scrollAmount;
+        scrollRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="pt-24 bg-white">
+    <div className="pt-24 bg-white min-h-screen">
       {/* Breadcrumbs */}
-      <div className="container mx-auto px-6 py-4 flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400">
-         <Link to="/" className="hover:text-emerald-950">Home</Link>
-         <ChevronRight size={10} />
-         <Link to="/collections" className="hover:text-emerald-950">Collections</Link>
-         <ChevronRight size={10} />
-         <span className="text-emerald-950 font-bold">{product.name}</span>
+      <div className="container mx-auto px-6 py-4 border-b border-gray-100">
+         <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400">
+            <Link to="/" className="hover:text-gold-500 transition-colors">Home</Link>
+            <ChevronRight size={10} />
+            <Link to="/collections" className="hover:text-gold-500 transition-colors">Collections</Link>
+            <ChevronRight size={10} />
+            <span className="text-emerald-950 font-bold">{product.name}</span>
+         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+      <div className="container mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           
-          {/* Left Column - Gallery */}
-          <div className="space-y-4">
+          {/* Left Column - Gallery (7/12 width on desktop) */}
+          <div className="lg:col-span-7 space-y-6">
             <div 
-                className="aspect-[4/5] w-full bg-cream-50 rounded-sm overflow-hidden relative cursor-zoom-in"
+                className="aspect-[4/5] w-full bg-cream-50 rounded-sm overflow-hidden relative cursor-zoom-in shadow-xl border border-gray-100/50 group"
                 onMouseEnter={() => setIsZoomed(true)}
                 onMouseLeave={() => { setIsZoomed(false); setMousePosition({ x: 50, y: 50 }); }}
                 onMouseMove={handleMouseMove}
@@ -93,141 +112,198 @@ const ProductDetail: React.FC = () => {
                         transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`
                     }}
                 />
+                
+                {/* Tags */}
                 {product.tag && (
-                    <span className={`absolute top-4 left-4 text-[10px] font-bold px-3 py-1 uppercase tracking-widest pointer-events-none ${
-                        product.tag === 'SALE' ? 'bg-red-500 text-white' : 'bg-emerald-950 text-white'
+                    <span className={`absolute top-6 left-6 text-[10px] font-bold px-4 py-2 uppercase tracking-[0.2em] shadow-sm backdrop-blur-md ${
+                        product.tag === 'SALE' ? 'bg-white/90 text-red-800' : 'bg-emerald-950/90 text-white'
                     }`}>
                         {product.tag}
                     </span>
                 )}
+
+                {/* Wishlist Button Overlay */}
+                <button className="absolute top-6 right-6 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors shadow-sm opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300">
+                    <Heart size={18} />
+                </button>
             </div>
-            {/* Thumbnails (Simulated for now with the main image repeated as mock) */}
-            <div className="grid grid-cols-4 gap-4">
-                {[product.image, product.image, product.image, product.image].map((img, idx) => (
-                    <div 
-                        key={idx} 
-                        onClick={() => setActiveImage(img)}
-                        className={`aspect-square cursor-pointer overflow-hidden rounded-sm border-2 transition-all ${activeImage === img ? 'border-gold-500 opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
-                    >
-                        <img 
-                            src={img} 
-                            alt="Thumbnail" 
-                            className="w-full h-full object-cover" 
-                            onError={(e) => { e.currentTarget.src = FALLBACK_IMAGE; }}
-                        />
-                    </div>
-                ))}
+
+            {/* Thumbnail Carousel */}
+            <div className="relative group/thumbs px-8">
+                <button 
+                    onClick={() => scrollThumbnails('left')}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white border border-gray-200 text-emerald-950 rounded-full hover:bg-emerald-950 hover:text-white transition-all disabled:opacity-50"
+                    aria-label="Scroll left"
+                >
+                    <ChevronLeft size={16} />
+                </button>
+                
+                <div 
+                    ref={scrollRef}
+                    className="flex gap-4 overflow-x-auto scrollbar-hide py-2 snap-x"
+                >
+                    {galleryImages.map((img, idx) => (
+                        <button 
+                            key={idx} 
+                            onClick={() => setActiveImage(img)}
+                            className={`flex-shrink-0 w-24 h-24 aspect-square cursor-pointer overflow-hidden rounded-sm border-2 transition-all snap-start ${
+                                activeImage === img 
+                                    ? 'border-emerald-950 opacity-100 ring-1 ring-emerald-950/20' 
+                                    : 'border-transparent opacity-60 hover:opacity-100 grayscale hover:grayscale-0'
+                            }`}
+                        >
+                            <img 
+                                src={img} 
+                                alt={`View ${idx + 1}`} 
+                                className="w-full h-full object-cover" 
+                                onError={(e) => { e.currentTarget.src = FALLBACK_IMAGE; }}
+                            />
+                        </button>
+                    ))}
+                </div>
+
+                <button 
+                    onClick={() => scrollThumbnails('right')}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white border border-gray-200 text-emerald-950 rounded-full hover:bg-emerald-950 hover:text-white transition-all"
+                    aria-label="Scroll right"
+                >
+                    <ChevronRight size={16} />
+                </button>
             </div>
           </div>
 
-          {/* Right Column - Product Details */}
-          <div>
-              <p className="text-gold-600 text-xs font-bold uppercase tracking-[0.2em] mb-2">{product.category}</p>
-              <h1 className="font-serif text-4xl lg:text-5xl text-emerald-950 mb-4">{product.name}</h1>
-              
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex text-gold-500">
-                    {[1,2,3,4,5].map(i => <Star key={i} size={16} fill="currentColor" />)}
-                </div>
-                <span className="text-xs text-gray-400">(24 Reviews)</span>
-              </div>
-
-              <div className="flex items-baseline gap-4 mb-8 pb-8 border-b border-gray-100">
-                  <span className="text-3xl font-serif text-emerald-950">{product.price}</span>
-                  {product.originalPrice && (
-                    <span className="text-lg text-gray-400 line-through font-light">{product.originalPrice}</span>
-                  )}
-                  {product.originalPrice && (
-                    <span className="text-xs text-red-600 font-bold px-2 py-1 bg-red-50 rounded-full">Save 30%</span>
-                  )}
-              </div>
-
-              <p className="text-gray-600 leading-relaxed font-light mb-8">
-                {product.description || "Experience the elegance of traditional craftsmanship with this exquisite piece. Designed for the modern woman who appreciates heritage, this jewellery item blends classic motifs with contemporary aesthetics."}
-              </p>
-
-              {/* Action Buttons */}
-              <div className="space-y-4 mb-10">
-                 {/* Retail Buttons */}
-                 <div className="flex flex-col sm:flex-row gap-4">
-                    <a 
-                        href={product.amazonLink || '#'} 
-                        target="_blank" 
-                        rel="noreferrer"
-                        className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-emerald-950 py-4 px-6 font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-lg transition-shadow rounded-sm"
-                    >
-                        Buy on Amazon <ExternalLink size={14} />
-                    </a>
-                    <a 
-                        href={product.flipkartLink || '#'} 
-                        target="_blank" 
-                        rel="noreferrer"
-                        className="flex-1 bg-[#2874F0] text-white py-4 px-6 font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#1e60d0] transition-colors rounded-sm"
-                    >
-                        Buy on Flipkart <ExternalLink size={14} />
-                    </a>
-                 </div>
-                 
-                 {/* Wholesale Button */}
-                 <button 
-                    onClick={handleWholesaleEnquiry}
-                    className="w-full border border-emerald-950 text-emerald-950 py-4 px-6 font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-950 hover:text-white transition-all duration-300 rounded-sm"
-                 >
-                    <MessageCircle size={16} /> Enquire for Wholesale / Bulk Order
-                 </button>
-              </div>
-
-              {/* Service Features */}
-              <div className="grid grid-cols-2 gap-4 mb-10">
-                 <div className="flex gap-3 items-center p-4 bg-cream-50 rounded-sm">
-                    <Truck size={20} className="text-emerald-950" />
-                    <div>
-                        <h5 className="font-bold text-emerald-950 text-[10px] uppercase tracking-wider">Fast Shipping</h5>
-                        <p className="text-[10px] text-gray-500">All over India</p>
+          {/* Right Column - Product Details (Sticky) (5/12 width) */}
+          <div className="lg:col-span-5 relative">
+              <div className="sticky top-32 space-y-8">
+                  
+                  {/* Header */}
+                  <div>
+                    <div className="flex justify-between items-start">
+                        <p className="text-gold-600 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">{product.category}</p>
+                        <button className="text-gray-400 hover:text-emerald-950 transition-colors"><Share2 size={18} /></button>
                     </div>
-                 </div>
-                 <div className="flex gap-3 items-center p-4 bg-cream-50 rounded-sm">
-                    <ShieldCheck size={20} className="text-emerald-950" />
-                    <div>
-                        <h5 className="font-bold text-emerald-950 text-[10px] uppercase tracking-wider">Quality Assured</h5>
-                        <p className="text-[10px] text-gray-500">Premium Finish</p>
+                    <h1 className="font-serif text-4xl lg:text-5xl text-emerald-950 mb-4 leading-tight">{product.name}</h1>
+                    
+                    {/* Rating */}
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="flex text-gold-500 gap-0.5">
+                            {[1,2,3,4,5].map(i => <Star key={i} size={14} fill="currentColor" />)}
+                        </div>
+                        <span className="text-[10px] uppercase tracking-wider text-gray-400 border-l border-gray-300 pl-4">Verified Quality</span>
                     </div>
-                 </div>
-              </div>
 
-              {/* Specifications */}
-              <div>
-                  <h3 className="font-serif text-xl text-emerald-950 mb-4">Product Details</h3>
-                  <div className="bg-white border border-gray-100 rounded-sm">
-                      {product.details ? (
-                          Object.entries(product.details).map(([key, value], idx) => (
-                            <div key={key} className={`flex justify-between py-3 px-4 ${idx % 2 === 0 ? 'bg-cream-50' : 'bg-white'}`}>
-                                <span className="text-xs font-bold text-emerald-950 uppercase tracking-wider">{key}</span>
-                                <span className="text-xs text-gray-600">{value}</span>
-                            </div>
-                          ))
-                      ) : (
-                          <div className="p-4 text-sm text-gray-500">Detailed specifications unavailable.</div>
-                      )}
+                    {/* Price */}
+                    <div className="flex items-baseline gap-4 pb-8 border-b border-gray-100/50">
+                        <span className="text-3xl font-serif text-emerald-950">{product.price}</span>
+                        {product.originalPrice && (
+                            <span className="text-lg text-gray-400 line-through font-light decoration-1">{product.originalPrice}</span>
+                        )}
+                    </div>
                   </div>
-              </div>
 
+                  {/* Description */}
+                  <div className="prose prose-sm text-gray-500 font-light leading-relaxed">
+                    <p>{product.description || "Experience the elegance of traditional craftsmanship with this exquisite piece. Designed for the modern woman who appreciates heritage, this jewellery item blends classic motifs with contemporary aesthetics."}</p>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="space-y-4 pt-4">
+                     {/* Retail Marketplaces */}
+                     <div className="grid grid-cols-2 gap-4">
+                        <a 
+                            href={product.amazonLink || '#'} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="group flex flex-col items-center justify-center p-4 border border-gray-200 hover:border-gold-500 rounded-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white"
+                        >
+                            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1 group-hover:text-gold-600">Buy On</span>
+                            <span className="font-serif text-lg text-emerald-950">Amazon</span>
+                        </a>
+                        <a 
+                            href={product.flipkartLink || '#'} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="group flex flex-col items-center justify-center p-4 border border-gray-200 hover:border-blue-500 rounded-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white"
+                        >
+                            <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-1 group-hover:text-blue-600">Buy On</span>
+                            <span className="font-serif text-lg text-emerald-950">Flipkart</span>
+                        </a>
+                     </div>
+                     
+                     {/* Wholesale CTA */}
+                     <button 
+                        onClick={handleWholesaleEnquiry}
+                        className="w-full bg-emerald-950 text-white py-5 px-6 font-bold text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-gold-500 hover:text-emerald-950 transition-all duration-300 shadow-xl shadow-emerald-900/10"
+                     >
+                        <MessageCircle size={18} /> Get Wholesale Price
+                     </button>
+                  </div>
+
+                  {/* Specifications Accordion/List */}
+                  <div className="pt-8">
+                      <h3 className="font-serif text-lg text-emerald-950 mb-4 flex items-center gap-3">
+                          Product Specifications
+                          <span className="h-px bg-gray-200 flex-grow"></span>
+                      </h3>
+                      <div className="space-y-3">
+                          {product.details ? (
+                              Object.entries(product.details).map(([key, value]) => (
+                                <div key={key} className="grid grid-cols-[120px_1fr] gap-4 text-xs py-2 border-b border-gray-50 last:border-0">
+                                    <span className="font-bold text-emerald-950 uppercase tracking-wider">{key}</span>
+                                    <span className="text-gray-600 font-light">{value}</span>
+                                </div>
+                              ))
+                          ) : (
+                              <div className="text-sm text-gray-500 italic">Specifications loading...</div>
+                          )}
+                      </div>
+                  </div>
+
+                  {/* Trust Badges */}
+                  <div className="grid grid-cols-3 gap-2 pt-6">
+                     <div className="flex flex-col items-center text-center p-3 bg-cream-50 rounded-sm">
+                        <Truck size={20} className="text-gold-600 mb-2" strokeWidth={1.5} />
+                        <span className="text-[9px] font-bold uppercase text-emerald-950">Fast Shipping</span>
+                     </div>
+                     <div className="flex flex-col items-center text-center p-3 bg-cream-50 rounded-sm">
+                        <ShieldCheck size={20} className="text-gold-600 mb-2" strokeWidth={1.5} />
+                        <span className="text-[9px] font-bold uppercase text-emerald-950">Quality Check</span>
+                     </div>
+                     <div className="flex flex-col items-center text-center p-3 bg-cream-50 rounded-sm">
+                        <Star size={20} className="text-gold-600 mb-2" strokeWidth={1.5} />
+                        <span className="text-[9px] font-bold uppercase text-emerald-950">Top Rated</span>
+                     </div>
+                  </div>
+
+              </div>
           </div>
         </div>
       </div>
 
-      {/* Related Products */}
+      {/* Related Products Section */}
       {relatedProducts.length > 0 && (
           <Section background="cream" className="mt-12 border-t border-cream-200">
-             <div className="flex justify-between items-end mb-12">
-                <h2 className="font-serif text-3xl text-emerald-950">You May Also Like</h2>
-                <Link to="/collections" className="text-gold-600 text-xs uppercase tracking-widest hover:underline">View All</Link>
+             <div className="container mx-auto px-4">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                    <div>
+                        <span className="text-gold-600 text-[10px] uppercase tracking-[0.25em] font-bold">Curated For You</span>
+                        <h2 className="font-serif text-3xl md:text-4xl text-emerald-950 mt-2">Complete The Look</h2>
+                    </div>
+                    <Link to="/collections" className="group flex items-center gap-2 text-emerald-950 text-xs uppercase tracking-widest hover:text-gold-600 transition-colors">
+                        View All Collections <ArrowRightIcon />
+                    </Link>
+                </div>
+                <ProductCarousel products={relatedProducts} />
              </div>
-             <ProductCarousel products={relatedProducts} />
           </Section>
       )}
     </div>
   );
 };
+
+// Simple arrow component to avoid extra imports if not needed, or just use Lucid
+const ArrowRightIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+)
 
 export default ProductDetail;

@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, Link } from 'react-router-dom';
 import { Menu, X, Instagram, Facebook, Twitter, CreditCard, MessageCircle } from 'lucide-react';
 import { Logo } from './Logo';
 import { NAV_ITEMS, WHATSAPP_LINK } from '../constants';
+
+// Specific Header Navigation as requested
+const HEADER_NAV_ITEMS = [
+  { label: 'Home', path: '/' },
+  { label: 'Collections', path: '/collections' },
+  { label: 'Categories', path: '/collections' }, // Pointing to collections as per standard implementation
+  { label: 'About', path: '/about' },
+  { label: 'Contact', path: '/contact' },
+];
 
 export const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,7 +27,7 @@ export const Layout: React.FC = () => {
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -26,56 +35,59 @@ export const Layout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-emerald-950 relative">
-      {/* Header - Z-index boosted to 60 to sit above the mobile menu (55) */}
+      {/* 
+        Header Redesign:
+        - Deep Emerald Green (#0F3B2E / bg-emerald-950)
+        - Reduced Height (py-3)
+        - Sticky/Fixed
+        - Logo Left, Nav Right
+      */}
       <header 
-        className={`fixed top-0 left-0 w-full z-[60] transition-all duration-500 ease-in-out ${
-          scrolled || isMenuOpen 
-            ? 'bg-emerald-950/95 backdrop-blur-md shadow-lg py-2 md:py-3' 
-            : 'bg-transparent py-6'
+        className={`fixed top-0 left-0 w-full z-[60] bg-emerald-950 transition-all duration-300 shadow-md ${
+          scrolled ? 'py-2' : 'py-3'
         }`}
       >
-        <div className="container mx-auto px-6 flex justify-between items-center">
+        <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
           
-          <div className="flex items-center gap-2 z-[60]">
+          {/* Logo - Aligned Left */}
+          <div className="flex-shrink-0 z-[60]">
              <NavLink to="/">
                 <Logo 
                   variant="light" 
-                  size={scrolled ? 'small' : 'default'}
-                  className="origin-left"
+                  size="small"
+                  className="origin-left transform scale-90 md:scale-100"
                 />
              </NavLink>
           </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex gap-12 items-center">
-            {NAV_ITEMS.map((item) => (
+          {/* Desktop Nav - Aligned Right */}
+          <nav className="hidden md:flex items-center gap-8 ml-auto">
+            {HEADER_NAV_ITEMS.map((item) => (
               <NavLink
-                key={item.path}
+                key={item.label}
                 to={item.path}
                 end={item.path === '/'}
                 className={({ isActive }) =>
-                  `text-[11px] tracking-[0.25em] uppercase font-bold transition-all duration-300 relative group ${
+                  `text-xs tracking-[0.2em] uppercase font-bold transition-all duration-300 relative group ${
                     isActive 
                       ? 'text-gold-400' 
-                      : scrolled 
-                        ? 'text-emerald-100/80 hover:text-white' 
-                        : 'text-white/90 hover:text-gold-400'
+                      : 'text-white hover:text-gold-400'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
                     {item.label}
-                    <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-400 transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}></span>
+                    <span className={`absolute -bottom-2 left-0 w-full h-[1px] bg-gold-400 transform origin-left transition-transform duration-300 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
                   </>
                 )}
               </NavLink>
             ))}
           </nav>
 
-          {/* Mobile Menu Button - Z-index matches header */}
+          {/* Mobile Menu Button - Right aligned */}
           <button
-            className={`md:hidden transition-colors p-2 z-[60] ${scrolled || isMenuOpen ? 'text-gold-400' : 'text-white'}`}
+            className="md:hidden text-gold-400 p-2 z-[60] hover:text-white transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -84,21 +96,21 @@ export const Layout: React.FC = () => {
         </div>
       </header>
 
-      {/* Mobile Nav Overlay - Z-index 55 to sit above global texture (50) but below header (60) */}
+      {/* Mobile Nav Overlay */}
       <div 
         className={`md:hidden fixed inset-0 bg-emerald-950 z-[55] flex items-center justify-center transition-all duration-500 ${
             isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible delay-300'
         }`}
       >
-        <nav className="flex flex-col space-y-8 text-center p-6">
-          {NAV_ITEMS.map((item) => (
+        <nav className="flex flex-col space-y-8 text-center p-6 w-full">
+          {HEADER_NAV_ITEMS.map((item) => (
             <NavLink
-              key={item.path}
+              key={item.label}
               to={item.path}
               end={item.path === '/'}
               onClick={() => setIsMenuOpen(false)}
               className={({ isActive }) =>
-                `text-3xl font-serif tracking-wide transition-colors duration-300 ${
+                `text-2xl font-serif tracking-wide transition-colors duration-300 ${
                   isActive ? 'text-gold-400' : 'text-emerald-100 hover:text-white'
                 }`
               }
@@ -106,15 +118,18 @@ export const Layout: React.FC = () => {
               {item.label}
             </NavLink>
           ))}
+          {/* Add extra important links for mobile accessibility */}
+           <div className="w-12 h-[1px] bg-white/10 mx-auto my-4"></div>
+           <NavLink to="/wholesale" onClick={() => setIsMenuOpen(false)} className="text-sm uppercase tracking-widest text-emerald-200 hover:text-white">Wholesale</NavLink>
         </nav>
       </div>
 
-      {/* Main Content */}
-      <main className={`flex-grow ${isHome ? '' : 'pt-24'}`}>
+      {/* Main Content - Add padding top to account for fixed header */}
+      <main className={`flex-grow ${isHome ? '' : 'pt-20'}`}>
         <Outlet />
       </main>
 
-      {/* Detailed Footer */}
+      {/* Footer - Keeps full navigation from constants */}
       <footer className="bg-emerald-950 text-white border-t border-gold-500/10">
         
         {/* Top Info Section */}
