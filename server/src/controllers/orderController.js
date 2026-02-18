@@ -1,16 +1,64 @@
 import { nanoid } from 'nanoid';
 import Order from '../models/Order.js';
+import Product from '../models/Product.js';
 import { razorpay } from '../config/razorpay.js';
 
 export const createOrder = async (req, res) => {
   const { items, amount, paymentMethod, shippingAddress } = req.body;
-  const gstAmount = Math.round(amount * 0.03);
-  const finalAmount = amount + gstAmount;
+
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ message: 'Order must include at least one item' });
+  }
+
+  const normalizedItems = items.map((item) => ({
+    productId: String(item?.product || ''),
+    quantity: Number(item?.quantity)
+  }));
+
+  if (normalizedItems.some((item) => !item.productId || !Number.isInteger(item.quantity) || item.quantity <= 0)) {
+    return res.status(400).json({ message: 'Invalid order items' });
+  }
+
+  const uniqueProductIds = [...new Set(normalizedItems.map((item) => item.productId))];
+  const products = await Product.find({ _id: { $in: uniqueProductIds }, isActive: true }).select('_id price stock');
+
+  if (products.length !== uniqueProductIds.length) {
+    return res.status(400).json({ message: 'Some products are unavailable' });
+  }
+
+  const productMap = new Map(products.map((product) => [String(product._id), product]));
+  let computedAmount = 0;
+  const computedItems = [];
+
+  for (const item of normalizedItems) {
+    const product = productMap.get(item.productId);
+
+    if (!product) {
+      return res.status(400).json({ message: 'Some products are unavailable' });
+    }
+
+    if (typeof product.stock === 'number' && item.quantity > product.stock) {
+      return res.status(400).json({ message: 'Requested quantity is not in stock' });
+    }
+
+    const itemPrice = Number(product.price);
+    computedAmount += itemPrice * item.quantity;
+    computedItems.push({ product: product._id, quantity: item.quantity, price: itemPrice });
+  }
+
+  const clientAmount = Number(amount);
+  if (Number.isFinite(clientAmount) && Math.round(clientAmount) !== Math.round(computedAmount)) {
+    return res.status(400).json({ message: 'Order amount mismatch' });
+  }
+
+  const gstAmount = Math.round(computedAmount * 0.03);
+  const finalAmount = computedAmount + gstAmount;
+
   const order = await Order.create({
     orderId: `DG-${Date.now()}`,
     user: req.user?.userId,
-    items,
-    amount,
+    items: computedItems,
+    amount: computedAmount,
     gstAmount,
     finalAmount,
     paymentMethod,
