@@ -406,12 +406,6 @@ export const INSTAGRAM_IMAGES = [
   'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=400&q=80',
   'https://images.unsplash.com/photo-1626784215021-2e39ccf971cd?auto=format&fit=crop&w=400&q=80'
 ];
-    'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=400',
-    'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=400',
-    'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=400',
-    'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=400',
-    'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=400',
-];
 
 export const TESTIMONIALS: Testimonial[] = [
     {
