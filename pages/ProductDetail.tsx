@@ -24,17 +24,9 @@ const ProductDetail: React.FC = () => {
   const { addToCart, toggleWishlist, wishlist } = useShop();
   const isWishlisted = product ? wishlist.includes(product.id) : false;
 
-  const DUMMY_GALLERY = [
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=800",
-      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800",
-      "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800",
-      "https://images.unsplash.com/photo-1626784215021-2e39ccf971cd?auto=format&fit=crop&q=80&w=800",
-      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=800"
-  ];
-
   const galleryImages = product ? [
     product.image,
-    ...(product.images && product.images.length > 0 ? product.images : DUMMY_GALLERY)
+    ...(product.images ?? [])
   ] : [];
 
   useEffect(() => {

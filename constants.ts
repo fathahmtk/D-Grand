@@ -118,6 +118,10 @@ export const PRODUCTS: Product[] = [
     name: 'Antique Gold Bridal Set',
     category: 'Bridal Sets',
     image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&q=80&w=800'
+    ],
     amazonLink: '#',
     flipkartLink: '#',
     price: '₹2,450',
@@ -137,6 +141,10 @@ export const PRODUCTS: Product[] = [
     name: 'Emerald Kundan Choker',
     category: 'Necklaces',
     image: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1601821765780-754fa98637c1?auto=format&fit=crop&q=80&w=800'
+    ],
     amazonLink: '#',
     flipkartLink: '#',
     price: '₹1,250',
@@ -156,6 +164,10 @@ export const PRODUCTS: Product[] = [
     name: 'Temple Design Jhumkas',
     category: 'Earrings',
     image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1633810542706-90e5ff7557be?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?auto=format&fit=crop&q=80&w=800'
+    ],
     amazonLink: '#',
     flipkartLink: '#',
     price: '₹850',
@@ -174,6 +186,10 @@ export const PRODUCTS: Product[] = [
     name: 'Matte Finish Bangles',
     category: 'Bangles',
     image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1612423284934-2850a4ea6b0f?auto=format&fit=crop&q=80&w=800'
+    ],
     amazonLink: '#',
     flipkartLink: '#',
     price: '₹950',
@@ -193,6 +209,10 @@ export const PRODUCTS: Product[] = [
     name: 'Ruby Stone Haram',
     category: 'Temple Jewellery',
     image: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1600721391776-b5cd0e0048f9?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1603974372039-adc49044b6bd?auto=format&fit=crop&q=80&w=800'
+    ],
     amazonLink: '#',
     flipkartLink: '#',
     price: '₹3,150',
@@ -212,6 +232,10 @@ export const PRODUCTS: Product[] = [
     name: 'AD Stone Necklace',
     category: 'Necklaces',
     image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&q=80&w=800'
+    ],
     amazonLink: '#',
     flipkartLink: '#',
     price: '₹1,850',
@@ -230,6 +254,10 @@ export const PRODUCTS: Product[] = [
     name: 'Kundan Maang Tikka',
     category: 'Bridal Sets',
     image: 'https://images.unsplash.com/photo-1626784215021-2e39ccf971cd?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1589128777073-263566ae5e4d?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&q=80&w=800'
+    ],
     amazonLink: '#',
     flipkartLink: '#',
     price: '₹650',
@@ -248,6 +276,10 @@ export const PRODUCTS: Product[] = [
     name: 'Polki Diamond Ring',
     category: 'Rings',
     image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1619119069152-a2b331eb392a?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=800'
+    ],
     amazonLink: '#',
     flipkartLink: '#',
     price: '₹450',
