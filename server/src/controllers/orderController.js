@@ -27,7 +27,7 @@ export const createOrder = async (req, res) => {
   }
 
   const productMap = new Map(products.map((product) => [String(product._id), product]));
-  let computedAmount = 0;
+  let computedAmountInPaise = 0;
   const computedItems = [];
 
   for (const item of normalizedItems) {
@@ -42,17 +42,25 @@ export const createOrder = async (req, res) => {
     }
 
     const itemPrice = Number(product.price);
-    computedAmount += itemPrice * item.quantity;
+    if (!Number.isFinite(itemPrice) || itemPrice < 0) {
+      return res.status(400).json({ message: 'Invalid product pricing' });
+    }
+
+    const itemPriceInPaise = Math.round(itemPrice * 100);
+    computedAmountInPaise += itemPriceInPaise * item.quantity;
     computedItems.push({ product: product._id, quantity: item.quantity, price: itemPrice });
   }
 
+  const computedAmount = computedAmountInPaise / 100;
   const clientAmount = Number(amount);
-  if (Number.isFinite(clientAmount) && Math.round(clientAmount) !== Math.round(computedAmount)) {
+  if (Number.isFinite(clientAmount) && Math.round(clientAmount * 100) !== computedAmountInPaise) {
     return res.status(400).json({ message: 'Order amount mismatch' });
   }
 
-  const gstAmount = Math.round(computedAmount * 0.03);
-  const finalAmount = computedAmount + gstAmount;
+  const gstAmountInPaise = Math.round(computedAmountInPaise * 0.03);
+  const finalAmountInPaise = computedAmountInPaise + gstAmountInPaise;
+  const gstAmount = gstAmountInPaise / 100;
+  const finalAmount = finalAmountInPaise / 100;
 
   const order = await Order.create({
     orderId: `DG-${Date.now()}`,
@@ -67,7 +75,7 @@ export const createOrder = async (req, res) => {
   });
 
   if (paymentMethod !== 'Cash on Delivery') {
-    const razorpayOrder = await razorpay.orders.create({ amount: finalAmount * 100, currency: 'INR', receipt: order.orderId });
+    const razorpayOrder = await razorpay.orders.create({ amount: finalAmountInPaise, currency: 'INR', receipt: order.orderId });
     return res.status(201).json({ order, razorpayOrder });
   }
 
