@@ -5,8 +5,10 @@ import { signToken } from '../utils/jwt.js';
 export const sendOtp = async (req, res) => {
   const { mobile } = req.body;
   if (!mobile) return res.status(400).json({ message: 'Mobile required' });
-  generateOtp(mobile);
-  res.json({ message: 'OTP sent' });
+  const otp = generateOtp(mobile);
+  // This project currently uses an in-memory OTP service with no SMS provider,
+  // so include the OTP in the response to keep the verification flow usable.
+  res.json({ message: 'OTP sent', otp });
 };
 
 export const loginWithOtp = async (req, res) => {
