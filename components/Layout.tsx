@@ -371,8 +371,10 @@ export const Layout: React.FC = () => {
                   <ul className="space-y-4 text-xs text-gray-400 font-medium">
                      <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
                      <li><Link to="/wholesale" className="hover:text-white transition-colors">Wholesale Enquiry</Link></li>
-                     <li><Link to="/about" className="hover:text-white transition-colors">Shipping Policy</Link></li>
-                     <li><Link to="/about" className="hover:text-white transition-colors">Returns</Link></li>
+                     <li><Link to="/shipping-policy" className="hover:text-white transition-colors">Shipping Policy</Link></li>
+                     <li><Link to="/return-policy" className="hover:text-white transition-colors">Returns</Link></li>
+                     <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                     <li><Link to="/checkout" className="hover:text-white transition-colors">Secure Checkout</Link></li>
                   </ul>
                </div>
 
@@ -396,8 +398,8 @@ export const Layout: React.FC = () => {
            <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-white/40 uppercase tracking-widest">
                <p>© {new Date().getFullYear()} D GRAND Jewellery</p>
                <div className="flex gap-6 mt-4 md:mt-0">
-                   <a href="#" className="hover:text-white">Privacy</a>
-                   <a href="#" className="hover:text-white">Terms</a>
+                   <Link to="/privacy-policy" className="hover:text-white">Privacy</Link>
+                   <Link to="/return-policy" className="hover:text-white">Returns</Link>
                </div>
            </div>
         </div>

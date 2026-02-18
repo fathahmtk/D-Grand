@@ -16,6 +16,7 @@ export const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1573408301185-a
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', path: '/' },
+  { label: 'Shop', path: '/shop' },
   { label: 'Collections', path: '/collections' },
   { 
     label: 'Bangles', 
@@ -72,6 +73,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Wholesale', path: '/wholesale' },
   { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
+  { label: 'Account', path: '/account' },
 ];
 
 export const CATEGORIES = [

@@ -12,6 +12,13 @@ import ProductDetail from './pages/ProductDetail';
 import Journal from './pages/Journal';
 import JournalPost from './pages/JournalPost';
 import Wishlist from './pages/Wishlist';
+import Shop from './pages/Shop';
+import Checkout from './pages/Checkout';
+import Account from './pages/Account';
+import ShippingPolicy from './pages/ShippingPolicy';
+import ReturnPolicy from './pages/ReturnPolicy';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Admin from './pages/Admin';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -39,6 +46,13 @@ const App: React.FC = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="product/:id" element={<ProductDetail />} />
             <Route path="wishlist" element={<Wishlist />} />
+            <Route path="shop" element={<Shop />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="account" element={<Account />} />
+            <Route path="shipping-policy" element={<ShippingPolicy />} />
+            <Route path="return-policy" element={<ReturnPolicy />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="admin" element={<Admin />} />
           </Route>
         </Routes>
       </HashRouter>
