@@ -20,6 +20,11 @@ const ProductDetail: React.FC = () => {
   
   const isWishlisted = product ? wishlist.includes(product.id) : false;
 
+  const galleryImages = product ? [
+    product.image,
+    ...(product.images ?? [])
+  ] : [];
+
   useEffect(() => {
     if (product) {
       setActiveImage(product.image);
