@@ -145,70 +145,182 @@ export const PRODUCTS: Product[] = [
     id: '1',
     name: 'Royal Kundan Choker',
     category: 'Bridal Sets',
-    subCategory: 'Bridal Sets',
-    style: 'Kundan',
-    finish: 'Gold',
-    material: 'Copper Alloy',
-    plating: 'Micro Gold',
-    occasion: 'Bridal',
-    price: '₹4,500',
-    originalPrice: '₹6,000',
-    image: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=800&auto=format&fit=crop',
-    tag: 'NEW',
-    description: 'Exquisite Kundan choker set with emerald beads and pearl drops. Perfect for bridal wear.',
-    details: { "Weight": "120g", "Stones": "Kundan & Emerald Beads" }
+    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&q=80&w=800'
+    ],
+    amazonLink: '#',
+    flipkartLink: '#',
+    price: '₹2,450',
+    originalPrice: '₹4,500',
+    tag: 'SALE',
+    description: "A majestic bridal set featuring intricate peacock motifs and temple-style craftsmanship. This complete set includes a long haram, choker, matching earrings, and maang tikka.",
+    details: {
+        "Material": "Copper Alloy",
+        "Plating": "Matte Gold Finish",
+        "Stones": "Kemp & AD Stones",
+        "Weight": "180g (Set)",
+        "Care": "Keep away from perfumes and water. Store in a plastic pouch."
+    }
   },
   {
     id: '2',
-    name: 'Temple Lakshmi Haram',
-    category: 'Neckwear',
-    subCategory: 'Long Haar',
-    style: 'Temple',
-    finish: 'Matte Gold',
-    region: 'South Indian',
-    material: 'Brass',
-    plating: 'Matte Gold',
-    occasion: 'Festive',
-    price: '₹3,200',
-    originalPrice: '₹4,000',
-    image: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=800&auto=format&fit=crop',
-    tag: 'SALE',
-    description: 'Traditional matte finish long haram featuring Goddess Lakshmi motifs.',
-    details: { "Weight": "150g", "Design": "Nakshi Work" }
+    name: 'Emerald Kundan Choker',
+    category: 'Necklaces',
+    image: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1601821765780-754fa98637c1?auto=format&fit=crop&q=80&w=800'
+    ],
+    amazonLink: '#',
+    flipkartLink: '#',
+    price: '₹1,250',
+    originalPrice: '₹1,800',
+    tag: 'NEW',
+    description: "Exquisite Kundan choker embellished with deep green emerald simulants and pearl drops. The adjustable dori ensures a perfect fit for any neck size.",
+    details: {
+        "Material": "Brass",
+        "Plating": "High Gold",
+        "Stones": "Kundan & Emerald Beads",
+        "Closure": "Adjustable Drawstring",
+        "Care": "Spot clean only."
+    }
   },
   {
     id: '3',
-    name: 'Antique Ruby Bangles',
-    category: 'Bangles',
-    subCategory: 'Stone Bangles',
-    style: 'Antique',
-    finish: 'Antique Gold',
-    size: '2.4, 2.6, 2.8',
-    material: 'Copper Alloy',
-    plating: 'Antique Gold',
-    occasion: 'Party',
-    price: '₹1,800',
-    image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop',
-    description: 'Set of 4 antique gold plated bangles with intricate ruby stone work.',
-    details: { "Set of": "4", "Stone": "Ruby Simulant" }
+    name: 'Temple Design Jhumkas',
+    category: 'Earrings',
+    image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1633810542706-90e5ff7557be?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?auto=format&fit=crop&q=80&w=800'
+    ],
+    amazonLink: '#',
+    flipkartLink: '#',
+    price: '₹850',
+    originalPrice: '₹1,200',
+    description: "Traditional bell-shaped Jhumkas featuring Goddess Lakshmi motifs. The antique oxidation gives it a heritage look suitable for silk sarees.",
+    details: {
+        "Material": "Alloy",
+        "Plating": "Antique Gold",
+        "Type": "Jhumka",
+        "Weight": "25g per earring",
+        "Care": "Wipe with soft cloth after use."
+    }
   },
   {
     id: '4',
-    name: 'Diamond Polki Studs',
-    category: 'Earrings',
-    subCategory: 'Studs',
-    style: 'Polki',
-    finish: 'Gold',
-    material: 'Alloy',
-    plating: 'Gold',
-    occasion: 'Party',
-    price: '₹1,200',
-    image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop',
-    description: 'Elegant American Diamond studs with rose gold plating.',
-    details: { "Closure": "Push Back", "Stone": "AD" }
+    name: 'Matte Finish Bangles',
+    category: 'Bangles',
+    image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1612423284934-2850a4ea6b0f?auto=format&fit=crop&q=80&w=800'
+    ],
+    amazonLink: '#',
+    flipkartLink: '#',
+    price: '₹950',
+    originalPrice: '₹1,450',
+    tag: 'NEW',
+    description: "Set of 4 matte finish bangles with ruby stone embellishments. The screw-open mechanism makes them easy to wear.",
+    details: {
+        "Material": "Copper",
+        "Plating": "Reddish Matte Gold",
+        "Size": "2.4, 2.6, 2.8 available",
+        "Stones": "Semi-precious Ruby",
+        "Care": "Avoid direct contact with chemicals."
+    }
   },
    {
     id: '5',
+    name: 'Ruby Stone Haram',
+    category: 'Temple Jewellery',
+    image: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1600721391776-b5cd0e0048f9?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1603974372039-adc49044b6bd?auto=format&fit=crop&q=80&w=800'
+    ],
+    amazonLink: '#',
+    flipkartLink: '#',
+    price: '₹3,150',
+    originalPrice: '₹4,200',
+    tag: 'SALE',
+    description: "Long architectural haram necklace with heavy ruby stone work. Designed to mimic the royal jewellery of ancient dynasties.",
+    details: {
+        "Material": "Brass Alloy",
+        "Plating": "Gold Plated",
+        "Length": "24 Inches",
+        "Stones": "Synthetic Ruby",
+        "Care": "Store in cotton or velvet box."
+    }
+  },
+  {
+    id: '6',
+    name: 'AD Stone Necklace',
+    category: 'Necklaces',
+    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&q=80&w=800'
+    ],
+    amazonLink: '#',
+    flipkartLink: '#',
+    price: '₹1,850',
+    originalPrice: '₹2,200',
+    description: "Contemporary necklace set studded with high-quality American Diamonds (AD) that sparkle like real diamonds. Perfect for receptions and cocktails.",
+    details: {
+        "Material": "Brass",
+        "Plating": "Silver/Rhodium",
+        "Stones": "American Diamond (CZ)",
+        "Style": "Modern/Party Wear",
+        "Care": "Clean with mild soapy water."
+    }
+  },
+  {
+    id: '7',
+    name: 'Kundan Maang Tikka',
+    category: 'Bridal Sets',
+    image: 'https://images.unsplash.com/photo-1626784215021-2e39ccf971cd?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1589128777073-263566ae5e4d?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&q=80&w=800'
+    ],
+    amazonLink: '#',
+    flipkartLink: '#',
+    price: '₹650',
+    originalPrice: '₹999',
+    description: "Oversized Maang Tikka with Kundan work and pearl chain. Adds a regal touch to any bridal hairstyle.",
+    details: {
+        "Material": "Alloy",
+        "Plating": "Gold",
+        "Stones": "Kundan & Pearl",
+        "Weight": "30g",
+        "Care": "Handle with care."
+    }
+  },
+  {
+    id: '8',
+    name: 'Polki Diamond Ring',
+    category: 'Rings',
+    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1619119069152-a2b331eb392a?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=800'
+    ],
+    amazonLink: '#',
+    flipkartLink: '#',
+    price: '₹450',
+    originalPrice: '₹750',
+    tag: 'SALE',
+    description: "Adjustable cocktail ring featuring uncut Polki style stones. A statement piece that complements both ethnic and western wear.",
+    details: {
+        "Material": "Brass",
+        "Plating": "Gold",
+        "Size": "Adjustable",
+        "Stones": "Polki Simulant",
+        "Care": "Keep dry."
+    }
     name: 'Minimalist Chain',
     category: 'Neckwear',
     subCategory: 'Short Necklaces',
@@ -285,6 +397,12 @@ export const BLOG_POSTS: BlogPost[] = [
 ];
 
 export const INSTAGRAM_IMAGES = [
+  'https://images.unsplash.com/photo-1599643478518-17488fbbcd75?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1626784215021-2e39ccf971cd?auto=format&fit=crop&w=400&q=80'
+];
     'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=400',
     'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=400',
     'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=400',
