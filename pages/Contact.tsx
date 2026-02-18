@@ -5,13 +5,7 @@ import { MapPin, Phone, Mail, Clock, Send, Plus, Minus, MessageSquare } from 'lu
 import { useShop } from '../context/ShopContext';
 
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    subject: '',
-    message: ''
-  });
-
+  const [formData, setFormData] = useState({ name: '', phone: '', subject: '', message: '' });
   const { showNotification } = useShop();
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
@@ -23,141 +17,87 @@ const Contact: React.FC = () => {
     e.preventDefault();
     showNotification("Redirecting to WhatsApp...");
     const text = `*General Enquiry from Website*%0A%0AName: ${formData.name}%0APhone: ${formData.phone}%0ASubject: ${formData.subject}%0AMessage: ${formData.message}`;
-    
-    // Small delay to let the user see the notification before the tab switch
     setTimeout(() => {
         window.open(`https://wa.me/91${PHONE_PRIMARY}?text=${text}`, '_blank');
     }, 1000);
   };
 
   const FAQS = [
-    { q: "Do you ship internationally?", a: "Yes, we ship worldwide via premium carriers like DHL and FedEx. Shipping charges are calculated based on the weight of the package and destination country." },
-    { q: "What is your return policy?", a: "We accept returns only if the product is damaged during transit. A complete unboxing video without cuts is mandatory to claim a return or exchange." },
-    { q: "Is the jewellery anti-allergic?", a: "Our premium collection is crafted with high-quality copper alloy and is nickel & lead-free, making it safe for most skin types." },
-    { q: "Do you take customization orders?", a: "Yes, we accept customization for bridal sets and bulk orders. The manufacturing timeline is typically 15-20 days depending on the design intricacy." },
+    { q: "International Shipping?", a: "Yes, via DHL/FedEx based on weight." },
+    { q: "Return Policy?", a: "Returns accepted only for damage during transit with unboxing video." },
+    { q: "Materials Used?", a: "High-quality copper alloy, nickel & lead-free." },
+    { q: "Customization?", a: "Available for bulk orders (MOQ applies)." },
   ];
 
   return (
     <>
-      {/* Hero */}
-      <div className="bg-emerald-950 text-white pt-32 pb-20 text-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+      <div className="bg-emerald-950 text-white pt-32 pb-20 text-center">
         <div className="relative z-10 animate-fade-in-up">
-            <span className="text-gold-400 uppercase tracking-[0.3em] text-[10px] font-bold mb-4 block">Get In Touch</span>
-            <h1 className="font-serif text-4xl md:text-6xl mb-4">Contact Us</h1>
-            <p className="text-emerald-100/60 text-sm font-light max-w-lg mx-auto">We are here to assist you with your orders and queries.</p>
+            <span className="text-teal-500 uppercase tracking-[0.3em] text-[10px] font-bold mb-4 block">Connect</span>
+            <h1 className="font-display text-5xl md:text-7xl mb-4 uppercase tracking-tighter">Contact Us</h1>
+            <p className="text-gray-400 text-sm font-light max-w-lg mx-auto">We engineer solutions for your needs.</p>
         </div>
       </div>
 
-      <Section background="white" className="relative z-10 -mt-10 pt-0">
-        <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-sm overflow-hidden border border-gray-100">
+      <Section background="white" className="pt-0 -mt-10 relative z-10">
+        <div className="max-w-6xl mx-auto bg-white border border-gray-100 shadow-2xl">
             <div className="grid grid-cols-1 lg:grid-cols-2">
                 
-                {/* Left: Contact Information */}
-                <div className="p-12 lg:p-16 bg-cream-50 flex flex-col justify-center">
+                <div className="p-12 lg:p-16 bg-gray-50 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-gray-100">
                     <div className="mb-10">
-                        <h2 className="font-serif text-3xl text-emerald-950 mb-6">Reach Out To Us</h2>
+                        <h2 className="font-display text-3xl text-emerald-950 mb-6">Headquarters</h2>
                         <p className="text-gray-500 font-light text-sm leading-relaxed max-w-md">
-                            Visit our store in Bangalore or connect with us online. We ensure a response within 24 hours.
+                            Bangalore, India.
                         </p>
                     </div>
 
                     <div className="space-y-8">
-                        <div className="flex gap-6 group">
-                            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 text-gold-600 border border-gray-100 group-hover:bg-emerald-950 group-hover:text-white transition-all duration-300">
-                                <MapPin size={20} />
+                        {[
+                            { icon: MapPin, title: "Visit", content: ADDRESS },
+                            { icon: Phone, title: "Call", content: `+91 ${PHONE_PRIMARY}\n+91 ${PHONE_SECONDARY}` },
+                            { icon: Mail, title: "Email", content: EMAIL },
+                            { icon: Clock, title: "Hours", content: "Mon - Sat: 10:30 AM - 8:30 PM" }
+                        ].map((item, i) => (
+                            <div key={i} className="flex gap-6">
+                                <div className="w-10 h-10 border border-gray-200 flex items-center justify-center flex-shrink-0 text-emerald-950">
+                                    <item.icon size={16} />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-emerald-950 uppercase text-[10px] tracking-widest mb-2">{item.title}</h4>
+                                    <p className="text-gray-600 text-sm font-light whitespace-pre-line">{item.content}</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 className="font-bold text-emerald-950 uppercase text-[10px] tracking-widest mb-2">Visit Our Store</h4>
-                                <p className="text-gray-600 text-sm font-light leading-relaxed whitespace-pre-line">{ADDRESS}</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-6 group">
-                            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 text-gold-600 border border-gray-100 group-hover:bg-emerald-950 group-hover:text-white transition-all duration-300">
-                                <Phone size={20} />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-emerald-950 uppercase text-[10px] tracking-widest mb-2">Call Us</h4>
-                                <p className="text-gray-600 text-sm font-light">+91 {PHONE_PRIMARY}</p>
-                                <p className="text-gray-600 text-sm font-light">+91 {PHONE_SECONDARY}</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-6 group">
-                            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 text-gold-600 border border-gray-100 group-hover:bg-emerald-950 group-hover:text-white transition-all duration-300">
-                                <Mail size={20} />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-emerald-950 uppercase text-[10px] tracking-widest mb-2">Email</h4>
-                                <p className="text-gray-600 text-sm font-light">{EMAIL}</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-6 group">
-                            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 text-gold-600 border border-gray-100 group-hover:bg-emerald-950 group-hover:text-white transition-all duration-300">
-                                <Clock size={20} />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-emerald-950 uppercase text-[10px] tracking-widest mb-2">Working Hours</h4>
-                                <p className="text-gray-600 text-sm font-light">Mon - Sat: 10:30 AM - 8:30 PM</p>
-                                <p className="text-gray-600 text-sm font-light">Sunday: Closed</p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Right: Inquiry Form */}
                 <div className="p-12 lg:p-16 bg-white">
-                    <h3 className="font-serif text-2xl text-emerald-950 mb-8 flex items-center gap-3">
-                        Send a Message
-                        <span className="h-px bg-gray-100 flex-grow"></span>
-                    </h3>
+                    <h3 className="font-display text-2xl text-emerald-950 mb-8">Send Message</h3>
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="group">
-                            <input 
-                                type="text" 
-                                name="name" 
-                                required
-                                value={formData.name}
-                                onChange={handleChange}
-                                placeholder="Your Name"
-                                className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-gold-500 transition-colors bg-transparent placeholder:text-gray-300 text-emerald-950"
-                            />
-                        </div>
-                        <div className="group">
-                            <input 
-                                type="tel" 
-                                name="phone" 
-                                required
-                                value={formData.phone}
-                                onChange={handleChange}
-                                placeholder="Phone Number"
-                                className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-gold-500 transition-colors bg-transparent placeholder:text-gray-300 text-emerald-950"
-                            />
-                        </div>
-                        <div className="group">
-                            <input 
-                                type="text" 
-                                name="subject" 
-                                required
-                                value={formData.subject}
-                                onChange={handleChange}
-                                placeholder="Subject (e.g., Order Status, General Enquiry)"
-                                className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-gold-500 transition-colors bg-transparent placeholder:text-gray-300 text-emerald-950"
-                            />
-                        </div>
+                        {['name', 'phone', 'subject'].map((field) => (
+                            <div key={field} className="group">
+                                <input 
+                                    type={field === 'phone' ? 'tel' : 'text'} 
+                                    name={field} 
+                                    required
+                                    value={formData[field as keyof typeof formData]}
+                                    onChange={handleChange}
+                                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                                    className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-teal-500 transition-colors bg-transparent placeholder:text-gray-300 text-emerald-950"
+                                />
+                            </div>
+                        ))}
                         <div className="group">
                             <textarea 
                                 name="message" 
                                 required
                                 value={formData.message}
                                 onChange={handleChange}
-                                placeholder="How can we help you?"
-                                className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-gold-500 transition-colors bg-transparent placeholder:text-gray-300 text-emerald-950 h-32 resize-none"
+                                placeholder="Message"
+                                className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-teal-500 transition-colors bg-transparent placeholder:text-gray-300 text-emerald-950 h-32 resize-none"
                             ></textarea>
                         </div>
-                        <button type="submit" className="w-full bg-emerald-950 text-white py-4 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gold-500 hover:text-emerald-950 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg">
+                        <button type="submit" className="w-full bg-emerald-950 text-white py-4 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-teal-600 transition-all duration-300 flex items-center justify-center gap-2">
                             Send Message <Send size={14} />
                         </button>
                     </form>
@@ -166,8 +106,7 @@ const Contact: React.FC = () => {
         </div>
       </Section>
 
-      {/* Full Width Map */}
-      <div className="h-[400px] w-full bg-gray-200 grayscale hover:grayscale-0 transition-all duration-700">
+      <div className="h-[400px] w-full bg-gray-100 grayscale invert">
         <iframe 
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.0256860087756!2d77.57396747507645!3d12.970196287345097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1605fa600001%3A0x6a0a0a0a0a0a0a0a!2sMamulpete%2C%20Chickpet%2C%20Bengaluru%2C%20Karnataka%20560053!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
             width="100%" 
@@ -175,54 +114,31 @@ const Contact: React.FC = () => {
             style={{ border: 0 }} 
             allowFullScreen 
             loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade"
-            title="D GRAND Location"
+            title="Location"
         ></iframe>
       </div>
 
-      {/* FAQ Section */}
-      <Section background="cream">
+      <Section background="white">
          <div className="max-w-3xl mx-auto">
              <div className="text-center mb-12">
-                 <span className="text-gold-600 text-[10px] uppercase tracking-[0.25em] font-bold">Help Center</span>
-                 <h2 className="font-serif text-3xl text-emerald-950 mt-3">Frequently Asked Questions</h2>
+                 <h2 className="font-display text-3xl text-emerald-950 mt-3">FAQ</h2>
              </div>
              
-             <div className="space-y-4">
+             <div className="border-t border-gray-100">
                  {FAQS.map((faq, idx) => (
-                     <div 
-                        key={idx} 
-                        className={`bg-white rounded-sm border transition-all duration-300 overflow-hidden ${
-                            openFaqIndex === idx ? 'border-gold-500/50 shadow-md' : 'border-gray-100 hover:border-gold-200'
-                        }`}
-                     >
+                     <div key={idx} className="border-b border-gray-100">
                          <button 
                             onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
-                            className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                            className="w-full flex items-center justify-between py-6 text-left focus:outline-none group"
                          >
-                             <span className={`font-serif text-lg ${openFaqIndex === idx ? 'text-emerald-950' : 'text-gray-600'}`}>
-                                 {faq.q}
-                             </span>
-                             <div className={`p-2 rounded-full transition-colors ${openFaqIndex === idx ? 'bg-gold-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                 {openFaqIndex === idx ? <Minus size={14} /> : <Plus size={14} />}
-                             </div>
+                             <span className="font-display text-lg text-emerald-950 group-hover:text-teal-600 transition-colors">{faq.q}</span>
+                             <div className="text-gray-300 group-hover:text-teal-600">{openFaqIndex === idx ? <Minus size={14} /> : <Plus size={14} />}</div>
                          </button>
-                         <div 
-                            className={`px-6 text-sm text-gray-500 font-light leading-relaxed transition-all duration-300 ease-in-out ${
-                                openFaqIndex === idx ? 'max-h-40 pb-6 opacity-100' : 'max-h-0 opacity-0'
-                            }`}
-                         >
-                             {faq.a}
+                         <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === idx ? 'max-h-40 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}>
+                             <p className="text-sm text-gray-500 font-light">{faq.a}</p>
                          </div>
                      </div>
                  ))}
-             </div>
-
-             <div className="text-center mt-12">
-                 <p className="text-gray-400 text-xs mb-4">Still have questions?</p>
-                 <a href={`https://wa.me/91${PHONE_PRIMARY}`} className="inline-flex items-center gap-2 text-emerald-950 font-bold text-xs uppercase tracking-widest border-b border-emerald-950 pb-1 hover:text-gold-600 hover:border-gold-600 transition-colors">
-                     <MessageSquare size={14} /> Chat with Support
-                 </a>
              </div>
          </div>
       </Section>

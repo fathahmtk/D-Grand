@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, ArrowRight } from 'lucide-react';
 import { HERO_SLIDES, WHATSAPP_LINK } from '../constants';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const HeroSlider: React.FC = () => {
   const [current, setCurrent] = useState(0);
@@ -15,68 +16,67 @@ export const HeroSlider: React.FC = () => {
 
   return (
     <section className="relative h-screen min-h-[700px] w-full overflow-hidden bg-emerald-950">
-      {HERO_SLIDES.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === current ? 'opacity-100 z-10' : 'opacity-0 z-0'
-          }`}
+      <AnimatePresence mode='wait'>
+        <motion.div
+          key={current}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute inset-0 z-0"
         >
-          {/* Image */}
           <img
-            src={slide.image}
-            alt={slide.title}
+            src={HERO_SLIDES[current].image}
+            alt="Hero Background"
             className="w-full h-full object-cover"
           />
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-emerald-950/40 mix-blend-multiply"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/80 via-transparent to-transparent"></div>
-        </div>
-      ))}
+          {/* Enhanced Dark Emerald Overlay */}
+          <div className="absolute inset-0 bg-emerald-950/60 mix-blend-multiply"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-emerald-950 via-transparent to-transparent opacity-80"></div>
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Content */}
-      <div className="relative z-20 h-full container mx-auto px-6 md:px-24 flex items-center">
-        <div className="max-w-4xl text-left">
-          {HERO_SLIDES.map((slide, index) => {
-            if (index !== current) return null;
-            return (
-              <div key={slide.id} className="animate-fade-in-up">
-                 <div className="flex items-center gap-4 mb-6">
-                     <div className="h-[2px] w-12 bg-gold-500"></div>
-                     <h2 className="text-gold-300 text-[10px] md:text-sm font-bold uppercase tracking-[0.3em] font-sans">
-                        {slide.subtitle}
-                     </h2>
+      <div className="relative z-20 h-full container mx-auto px-6 flex flex-col items-center justify-center text-center">
+        <div className="max-w-5xl">
+            <motion.div 
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+            >
+                 <div className="flex items-center justify-center gap-4 mb-8">
+                     <div className="h-px w-8 md:w-16 bg-gold-500/50"></div>
+                     <span className="text-gold-400 text-xs md:text-sm font-bold uppercase tracking-[0.3em] font-sans">
+                        Wholesale & Retail | Bangalore
+                     </span>
+                     <div className="h-px w-8 md:w-16 bg-gold-500/50"></div>
                  </div>
-                 <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-8 text-white drop-shadow-lg">
-                    {slide.title}
+                 
+                 <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-12 text-white tracking-tight drop-shadow-lg">
+                    Timeless Imitation <br/> <span className="text-gold-200">Jewellery Collection</span>
                  </h1>
-                 <div className="flex flex-wrap gap-6 mt-10">
-                      <Link to={slide.link} className="group relative px-10 py-5 bg-transparent border border-gold-400 text-gold-100 text-xs font-bold uppercase tracking-[0.25em] hover:bg-gold-500 hover:text-emerald-950 hover:border-gold-500 transition-all duration-500 overflow-hidden">
-                        <span className="relative z-10">{slide.cta}</span>
-                        <div className="absolute inset-0 bg-gold-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                 
+                 <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                      <Link to="/collections" className="w-full md:w-auto bg-gold-500 text-emerald-950 px-10 py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white transition-all duration-300 min-w-[200px] shadow-lg shadow-gold-500/20">
+                        View Collections
                       </Link>
-                      <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="flex items-center gap-3 px-6 py-5 text-white/90 text-xs font-bold uppercase tracking-[0.25em] hover:text-gold-400 transition-colors group">
-                        <MessageCircle size={18} className="text-gold-400" />
-                        <span>Enquire</span>
+                      <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="w-full md:w-auto border border-white/30 text-white px-10 py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-emerald-950 transition-all duration-300 flex items-center justify-center gap-3 min-w-[200px] backdrop-blur-sm">
+                         <MessageCircle size={16} /> Enquire on WhatsApp
                       </a>
                   </div>
-              </div>
-            );
-          })}
+            </motion.div>
         </div>
       </div>
 
-      {/* Indicators */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-30 flex gap-3">
-        {HERO_SLIDES.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrent(idx)}
-            className={`transition-all duration-500 ${
-              idx === current ? 'w-12 h-1 bg-gold-500' : 'w-2 h-1 bg-white/30 hover:bg-white'
-            }`}
+      {/* Progress Bar */}
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10 z-30">
+          <motion.div 
+            key={current}
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 6, ease: "linear" }}
+            className="h-full bg-gold-500"
           />
-        ))}
       </div>
     </section>
   );

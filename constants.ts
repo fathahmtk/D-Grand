@@ -12,20 +12,107 @@ export const AMAZON_LINK = "https://www.amazon.in";
 export const FLIPKART_LINK = "https://www.flipkart.com";
 export const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1573408301185-a1d31e857545?q=80&w=800&auto=format&fit=crop";
 
+// --- NAVIGATION & CATEGORIES ---
+
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', path: '/' },
   { label: 'Collections', path: '/collections' },
+  { 
+    label: 'Bangles', 
+    path: '/collections?category=Bangles',
+    children: [
+        { label: 'Daily Wear', path: '/collections?category=Bangles&subCategory=Daily+Wear', group: 'Type' },
+        { label: 'Stone Bangles', path: '/collections?category=Bangles&subCategory=Stone+Bangles', group: 'Type' },
+        { label: 'Bridal Sets', path: '/collections?category=Bangles&subCategory=Bridal+Bangles', group: 'Type' },
+        { label: 'Kadas & Cuffs', path: '/collections?category=Bangles&subCategory=Kadas', group: 'Type' },
+        { label: 'Antique Finish', path: '/collections?category=Bangles&finish=Antique', group: 'Finish' },
+        { label: 'Matte Gold', path: '/collections?category=Bangles&finish=Matte+Gold', group: 'Finish' },
+    ]
+  },
+  { 
+    label: 'Category', 
+    path: '/collections',
+    children: [
+        { label: 'Head Jewellery', path: '/collections?category=Head+Jewellery', group: 'Head' },
+        { label: 'Earrings', path: '/collections?category=Earrings', group: 'Ear' },
+        { label: 'Neckwear', path: '/collections?category=Neckwear', group: 'Neck' },
+        { label: 'Bangles & Bracelets', path: '/collections?category=Bangles', group: 'Hands' },
+        { label: 'Rings', path: '/collections?category=Rings', group: 'Hands' },
+        { label: 'Waist Jewellery', path: '/collections?category=Waist+Jewellery', group: 'Body' },
+        { label: 'Feet Jewellery', path: '/collections?category=Feet+Jewellery', group: 'Body' },
+        { label: 'Bridal Sets', path: '/collections?category=Bridal+Sets', group: 'Sets' },
+    ]
+  },
+  { 
+    label: 'Style', 
+    path: '/collections',
+    children: [
+        { label: 'Kundan', path: '/collections?style=Kundan', group: 'Traditional' },
+        { label: 'Polki', path: '/collections?style=Polki', group: 'Traditional' },
+        { label: 'Temple', path: '/collections?style=Temple', group: 'Traditional' },
+        { label: 'Antique', path: '/collections?style=Antique', group: 'Traditional' },
+        { label: 'American Diamond', path: '/collections?style=AD', group: 'Modern' },
+        { label: 'Rose Gold', path: '/collections?style=Rose+Gold', group: 'Modern' },
+        { label: 'Oxidized', path: '/collections?style=Oxidized', group: 'Fusion' },
+        { label: 'Matte Gold', path: '/collections?style=Matte+Gold', group: 'Traditional' },
+    ]
+  },
+  { 
+    label: 'Occasion', 
+    path: '/collections',
+    children: [
+        { label: 'Bridal', path: '/collections?occasion=Bridal', group: 'Wedding' },
+        { label: 'Reception', path: '/collections?occasion=Reception', group: 'Wedding' },
+        { label: 'Haldi / Mehendi', path: '/collections?occasion=Haldi', group: 'Wedding' },
+        { label: 'Party Wear', path: '/collections?occasion=Party', group: 'Social' },
+        { label: 'Office Wear', path: '/collections?occasion=Office', group: 'Daily' },
+        { label: 'Daily Wear', path: '/collections?occasion=Daily', group: 'Daily' },
+    ]
+  },
   { label: 'Wholesale', path: '/wholesale' },
-  { label: 'Marketplaces', path: '/marketplaces' },
-  { label: 'Journal', path: '/journal' },
   { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
 ];
 
+export const CATEGORIES = [
+  "Bangles",
+  "Neckwear",
+  "Earrings",
+  "Bridal Sets",
+  "Rings",
+  "Head Jewellery",
+  "Waist Jewellery",
+  "Feet Jewellery"
+];
+
+export const STYLES = ["Kundan", "Polki", "Temple", "Antique", "AD", "Matte Gold", "Rose Gold", "Oxidized", "Minimal"];
+export const OCCASIONS = ["Bridal", "Party", "Office", "Daily", "Festive", "Reception"];
+export const REGIONS = ["South Indian", "Rajwadi", "Maharashtrian", "Bengali", "Punjabi", "Hyderabadi"];
+
+export const CATEGORY_IMAGES = [
+  { name: 'Bangles', img: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop' },
+  { name: 'Bridal Sets', img: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop' },
+  { name: 'Temple', img: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=800&auto=format&fit=crop' },
+  { name: 'Earrings', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop' },
+  { name: 'Daily Wear', img: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?q=80&w=800&auto=format&fit=crop' }
+];
+
+export const COLLECTION_HEADERS: Record<string, string> = {
+  'All': 'https://images.unsplash.com/photo-1576906231649-14a5840d4f47?q=80&w=1920&auto=format&fit=crop', 
+  'Neckwear': 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1920&auto=format&fit=crop',
+  'Earrings': 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1920&auto=format&fit=crop',
+  'Bridal Sets': 'https://images.unsplash.com/photo-1602751584552-8ba420552259?q=80&w=1920&auto=format&fit=crop',
+  'Bangles': 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1920&auto=format&fit=crop',
+  'Temple': 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=1920&auto=format&fit=crop',
+  'Daily Wear': 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?q=80&w=1920&auto=format&fit=crop',
+};
+
+// --- HERO SLIDES ---
+
 export const HERO_SLIDES = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1920&auto=format&fit=crop", // Emerald Choker
+    image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1920&auto=format&fit=crop", 
     title: "Imperial Emerald & Gold",
     subtitle: "Timeless Elegance | Handcrafted Perfection",
     cta: "Shop The Collection",
@@ -33,7 +120,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1920&auto=format&fit=crop", // Indian Bride / Red & Gold
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1920&auto=format&fit=crop", 
     title: "Bridal Majesty & Heritage",
     subtitle: "Premium Imitation Jewellery | Wholesale & Retail",
     cta: "Shop on Flipkart",
@@ -41,7 +128,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1920&auto=format&fit=crop", // Gold Necklace Model
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1920&auto=format&fit=crop", 
     title: "Wholesale & Retail Excellence",
     subtitle: "Premium Imitation Jewellery | Wholesale & Retail",
     cta: "Explore Collections",
@@ -49,73 +136,12 @@ export const HERO_SLIDES = [
   }
 ];
 
-export const CATEGORIES = [
-  "Necklaces",
-  "Earrings",
-  "Bridal Sets",
-  "Bangles",
-  "Temple Jewellery"
-];
-
-export const CATEGORY_IMAGES = [
-  { name: 'Necklaces', img: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Earrings', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Bangles', img: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Bridal Sets', img: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Temple Jewellery', img: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=800&auto=format&fit=crop' }
-];
-
-export const COLLECTION_HEADERS: Record<string, string> = {
-  'All': 'https://images.unsplash.com/photo-1576906231649-14a5840d4f47?q=80&w=1920&auto=format&fit=crop', // Workshop/General
-  'Necklaces': 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1920&auto=format&fit=crop',
-  'Earrings': 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1920&auto=format&fit=crop',
-  'Bridal Sets': 'https://images.unsplash.com/photo-1602751584552-8ba420552259?q=80&w=1920&auto=format&fit=crop',
-  'Bangles': 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1920&auto=format&fit=crop',
-  'Temple Jewellery': 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=1920&auto=format&fit=crop'
-};
-
-export const OCCASIONS = [
-  { id: 'wedding', name: 'Wedding Vows', image: 'https://images.unsplash.com/photo-1583934555026-6f85ed31a470?q=80&w=800&auto=format&fit=crop' },
-  { id: 'party', name: 'Cocktail Party', image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop' },
-  { id: 'work', name: 'Office Elegance', image: 'https://images.unsplash.com/photo-1630568116558-8ba948ef53ac?q=80&w=800&auto=format&fit=crop' },
-  { id: 'gift', name: 'Perfect Gifts', image: 'https://images.unsplash.com/photo-1617038224531-ab5d78665b1a?q=80&w=800&auto=format&fit=crop' }
-];
-
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    id: '1',
-    name: "Priya Sharma",
-    location: "Bangalore",
-    comment: "Absolutely stunned by the quality. The antique finish looks exactly like real gold. Wore it to my cousin's wedding and got so many compliments!",
-    rating: 5
-  },
-  {
-    id: '2',
-    name: "Anjali Menon",
-    location: "Kochi",
-    comment: "Ordered a bridal set for my sister. Packaging was secure, delivery was fast, and the intricate detailing is breathtaking. Highly recommend.",
-    rating: 5
-  },
-  {
-    id: '3',
-    name: "Sneha Kapoor",
-    location: "Mumbai",
-    comment: "Best wholesaler in the market. My boutique customers love the designs, and the margins are excellent. D GRAND is my go-to supplier.",
-    rating: 5
-  },
-  {
-    id: '4',
-    name: "Lakshmi R.",
-    location: "Chennai",
-    comment: "The temple jewellery collection is divine. It feels very heavy and premium, not like cheap plastic imitation. Worth every rupee.",
-    rating: 4
-  }
-];
+// --- PRODUCTS ---
 
 export const PRODUCTS: Product[] = [
   {
     id: '1',
-    name: 'Antique Gold Bridal Set',
+    name: 'Royal Kundan Choker',
     category: 'Bridal Sets',
     image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&q=80&w=800',
     images: [
@@ -204,7 +230,7 @@ export const PRODUCTS: Product[] = [
         "Care": "Avoid direct contact with chemicals."
     }
   },
-  {
+   {
     id: '5',
     name: 'Ruby Stone Haram',
     category: 'Temple Jewellery',
@@ -293,67 +319,78 @@ export const PRODUCTS: Product[] = [
         "Stones": "Polki Simulant",
         "Care": "Keep dry."
     }
+    name: 'Minimalist Chain',
+    category: 'Neckwear',
+    subCategory: 'Short Necklaces',
+    style: 'Minimal',
+    finish: 'Gold',
+    material: 'Brass',
+    plating: '1g Gold',
+    occasion: 'Daily',
+    price: '₹850',
+    image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?q=80&w=800&auto=format&fit=crop',
+    description: 'Simple gold plated chain for everyday elegance.',
+    details: { "Length": "18 inches", "Thickness": "2mm" }
+  },
+  {
+    id: '6',
+    name: 'Bridal Matha Patti',
+    category: 'Head Jewellery',
+    subCategory: 'Matha Patti',
+    style: 'Kundan',
+    finish: 'Gold',
+    occasion: 'Bridal',
+    region: 'North Indian',
+    price: '₹2,100',
+    image: 'https://images.unsplash.com/photo-1602751584552-8ba420552259?q=80&w=800&auto=format&fit=crop',
+    description: 'Heavy bridal matha patti with kundan and pearls.',
+    details: { "Type": "Double Layer", "Pearl": "Faux Basra" }
+  },
+  {
+    id: '7',
+    name: 'Matte Gold Kada',
+    category: 'Bangles',
+    subCategory: 'Kadas',
+    style: 'Temple',
+    finish: 'Matte Gold',
+    size: 'Openable',
+    material: 'Brass',
+    plating: 'Matte Gold',
+    occasion: 'Wedding Guest',
+    price: '₹1,500',
+    image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop',
+    description: 'Statement openable kada with peacock motif in matte finish.',
+    details: { "Type": "Openable Screw", "Width": "20mm" }
   }
 ];
 
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: '1',
-    title: 'The Party Edit: Styling Heavy Jewellery',
-    excerpt: 'Discover the latest trends in party wear jewellery that will make you stand out at every occasion without overwhelming your outfit.',
-    category: 'Editorial',
-    image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop',
-    date: 'Jun 12, 2024',
-    content: [
-      "When it comes to making a statement, nothing speaks louder than a well-chosen piece of heavy jewellery. Whether you are attending a wedding reception or a festive gala, the right accessories can transform a simple outfit into a regal ensemble.",
-      "The key to styling heavy jewellery is balance. If you are wearing a heavily embroidered saree or lehenga, opt for a single statement piece—like a grand choker or oversized chandbalis—rather than a full set. This prevents the look from becoming cluttered and allows the craftsmanship to shine.",
-      "For 2024, we are seeing a resurgence of antique gold finishes paired with pastel outfits. The contrast between the muted fabric and the rich, dark gold tones creates a sophisticated aesthetic that is both modern and rooted in tradition. Don't be afraid to mix metals; a hint of silver in your bangles can add an unexpected edge to a gold-dominated look.",
-      "Remember, confidence is your best accessory. Wear pieces that make you feel powerful and beautiful, and you will turn heads wherever you go."
-    ]
+    title: 'The Art of Layering Jewellery',
+    excerpt: 'Discover how to style multiple necklaces for a regal look.',
+    image: 'https://images.unsplash.com/photo-1616036740257-9449ea1f6605?q=80&w=800&auto=format&fit=crop',
+    date: 'Oct 12, 2023',
+    category: 'Style Guide',
+    content: ['Layering is an art...']
   },
   {
     id: '2',
-    title: 'Modern Heirlooms: A Gift Guide',
-    excerpt: 'The perfect gift guide for the most important woman in your life. Show her your love with timeless pieces that she can cherish forever.',
-    category: 'Gifting',
-    image: 'https://images.unsplash.com/photo-1617038224531-ab5d78665b1a?q=80&w=800&auto=format&fit=crop',
-    date: 'May 08, 2024',
-    content: [
-      "Jewellery has always been more than just adornment; it is a vessel for memories and a symbol of love. Finding the perfect piece for a loved one can be daunting, but the trick lies in understanding their personal style and the sentiment you wish to convey.",
-      "For the minimalist, consider delicate chains with solitaire pendants or sleek bracelets that can be worn daily. These pieces become a second skin, a constant reminder of the giver. Our 'Everyday Elegance' collection features high-quality AD stones set in rose gold plating, offering a subtle sparkle suitable for the office or brunch.",
-      "If you are gifting for a significant milestone—like an anniversary or a wedding—opt for something with cultural significance. Temple jewellery, with its divine motifs and sturdy craftsmanship, serves as a modern heirloom. These pieces age beautifully and can be passed down through generations, carrying stories with them.",
-      "Ultimately, the best gift is one chosen with thought. Pay attention to the jewellery she currently wears—does she prefer gold or silver? Heavy or light? Use these cues to find a treasure she will cherish forever."
-    ]
+    title: 'Caring for Imitation Jewellery',
+    excerpt: 'Tips to keep your gold plating shiny for years.',
+    image: 'https://images.unsplash.com/photo-1576906231649-14a5840d4f47?q=80&w=800&auto=format&fit=crop',
+    date: 'Sep 28, 2023',
+    category: 'Care',
+    content: ['Avoid perfumes...']
   },
   {
-    id: '3',
-    title: 'The Bridal Trousseau Checklist',
-    excerpt: 'Complete your bridal look with our exclusive wedding collection. From Maang Tikka to Toe Rings, here is everything you need.',
-    category: 'Wedding',
+     id: '3',
+    title: 'Bridal Trends 2024',
+    excerpt: 'What the modern bride is wearing this season.',
     image: 'https://images.unsplash.com/photo-1602751584552-8ba420552259?q=80&w=800&auto=format&fit=crop',
-    date: 'Apr 20, 2024',
-    content: [
-      "Every bride dreams of looking like royalty on her big day. While the outfit sets the tone, it is the jewellery that adds the finishing touch of grandeur. Building a bridal trousseau is an art, requiring a mix of statement pieces for the main events and lighter sets for post-wedding functions.",
-      "1. The Maang Tikka & Matha Patti: These frame the face and are essential for the traditional Indian bridal look. Choose a size that complements your forehead width.",
-      "2. The Choker & Long Haram: Layering is a trend that isn't going away. Pair a snug-fitting choker with a long, architectural haram to create depth and drama.",
-      "3. Bangles & Kadas: A bride's hands are always in focus. Mix glass bangles with heavy gold-plated kadas for a rich, textured sound and look.",
-      "4. Waist Belt (Vaddanam): Not only does it accentuate the waist, but it also holds the saree pleats in place, ensuring you look poised throughout the ceremony.",
-      "At D GRAND, we specialize in complete bridal sets that ensure every piece matches perfectly in tone and finish, taking the stress out of your wedding shopping."
-    ]
-  },
-  {
-    id: '4',
-    title: 'Everyday Luxury for the Workplace',
-    excerpt: 'Minimalist designs that add a touch of sparkle to your 9-to-5 without breaking the dress code. Celebrate your success with elegance.',
-    category: 'Lifestyle',
-    image: 'https://images.unsplash.com/photo-1630568116558-8ba948ef53ac?q=80&w=800&auto=format&fit=crop',
-    date: 'Feb 10, 2024',
-    content: [
-      "Gone are the days when jewellery was reserved for special occasions. The modern woman expresses herself through style every day, including in the boardroom. Workplace jewellery should be understated yet sophisticated, enhancing your professional attire without being distracting.",
-      "Stick to the 'Less is More' philosophy. A pair of classic pearl studs or small geometric hoops can brighten your face during video calls. Avoid bangles that jingle, as they can be noisy while typing; instead, opt for a sleek watch or a fixed cuff bracelet.",
-      "Pendants are a great way to add personality to a button-down shirt. Choose a chain length that sits just below the collarbone for the most flattering look.",
-      "Investing in high-quality imitation jewellery allows you to rotate your look frequently without the fear of losing expensive real gold pieces during the commute. It's about feeling confident and put-together, ready to conquer the day."
-    ]
+    date: 'Aug 15, 2023',
+    category: 'Trends',
+    content: ['Pastels and Polki...']
   }
 ];
 
@@ -363,4 +400,27 @@ export const INSTAGRAM_IMAGES = [
   'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=400&q=80',
   'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=400&q=80',
   'https://images.unsplash.com/photo-1626784215021-2e39ccf971cd?auto=format&fit=crop&w=400&q=80'
+];
+    'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=400',
+    'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=400',
+    'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=400',
+    'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=400',
+    'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=400',
+];
+
+export const TESTIMONIALS: Testimonial[] = [
+    {
+        id: '1',
+        name: 'Priya S.',
+        location: 'Bangalore',
+        comment: 'The quality is indistinguishable from real gold. Amazing craftsmanship!',
+        rating: 5
+    },
+    {
+        id: '2',
+        name: 'Anjali M.',
+        location: 'Mumbai',
+        comment: 'Best wholesale rates I found. My boutique customers love the collection.',
+        rating: 5
+    }
 ];
