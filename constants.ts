@@ -321,6 +321,9 @@ export const PRODUCTS: Product[] = [
         "Stones": "Polki Simulant",
         "Care": "Keep dry."
     }
+  },
+  {
+    id: '9',
     name: 'Minimalist Chain',
     category: 'Neckwear',
     subCategory: 'Short Necklaces',
