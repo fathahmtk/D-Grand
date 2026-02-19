@@ -3,7 +3,9 @@ const otpStore = new Map();
 export const generateOtp = (mobile) => {
   const otp = String(Math.floor(100000 + Math.random() * 900000));
   otpStore.set(mobile, { otp, expiresAt: Date.now() + 5 * 60 * 1000 });
-  console.log(`OTP for ${mobile}: ${otp}`);
+  // Until an SMS/email provider is wired in, log the OTP so operators can
+  // retrieve it for the `/verify-otp` flow in non-production environments.
+  console.info(`OTP generated for mobile ${mobile}: ${otp}`);
   return otp;
 };
 
