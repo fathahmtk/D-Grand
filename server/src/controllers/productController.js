@@ -1,31 +1,31 @@
-import Product from '../models/Product.js';
+/**
+ * ProductController — HTTP adapter only
+ * Calls productService, shapes the HTTP response. Zero business logic.
+ */
+
+import { productService } from '../services/productService.js';
 
 export const listProducts = async (req, res) => {
-  const { category, q } = req.query;
-  const query = { isActive: true };
-  if (category) query.category = category;
-  if (q) query.title = { $regex: q, $options: 'i' };
-  const products = await Product.find(query).sort({ createdAt: -1 });
+  const products = await productService.listProducts(req.query);
   res.json(products);
 };
 
 export const getProduct = async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) return res.status(404).json({ message: 'Product not found' });
+  const product = await productService.getProduct(req.params.id);
   res.json(product);
 };
 
 export const createProduct = async (req, res) => {
-  const product = await Product.create(req.body);
+  const product = await productService.createProduct(req.body);
   res.status(201).json(product);
 };
 
 export const updateProduct = async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  const product = await productService.updateProduct(req.params.id, req.body);
   res.json(product);
 };
 
 export const deleteProduct = async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Product deleted' });
+  await productService.deleteProduct(req.params.id);
+  res.json({ message: 'Product removed' });
 };

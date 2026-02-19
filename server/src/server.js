@@ -6,6 +6,8 @@ import morgan from 'morgan';
 import { connectDb } from './config/db.js';
 import { env } from './config/env.js';
 import logger from './utils/logger.js';
+import { AppError } from './lib/AppError.js';
+import './listeners/orderListeners.js'; // register domain event listeners
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
@@ -47,17 +49,15 @@ const authLimiter = rateLimit({
 app.use(globalLimiter);
 
 // ─── Raw Body for Razorpay Webhook ────────────────────────────────────────────
-// Must be set BEFORE express.json() so the raw buffer is preserved for HMAC.
-app.use(
-  '/api/orders/webhook',
-  express.raw({ type: 'application/json' })
-);
+// Must be registered BEFORE express.json() so the raw Buffer is preserved
+// for HMAC-SHA256 signature verification in OrderService.handleWebhook().
+app.use('/api/orders/webhook', express.raw({ type: 'application/json' }));
 
 // ─── Body Parser ──────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '2mb' }));
 
 // ─── HTTP Request Logging ─────────────────────────────────────────────────────
-// Pipe morgan tokens into winston so all logs are in one stream.
+// Pipe morgan tokens into winston so all logs pass through one system.
 const morganStream = { write: (msg) => logger.http(msg.trim()) };
 app.use(morgan(env.isProd ? 'combined' : 'dev', { stream: morganStream }));
 
@@ -79,9 +79,19 @@ app.use((_req, res) => {
 // ─── Global Error Handler ─────────────────────────────────────────────────────
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
-  logger.error({ message: err.message, stack: err.stack, statusCode: err.statusCode });
-  res.status(err.statusCode || 500).json({
-    message: err.message || 'Something went wrong',
+  if (err.isOperational) {
+    // Known AppError — safe to surface message + optional meta to the client.
+    return res.status(err.statusCode).json({
+      message: err.message,
+      ...(Object.keys(err.meta || {}).length ? { meta: err.meta } : {}),
+    });
+  }
+
+  // Unexpected bug — never expose internals in production.
+  logger.error({ message: err.message, stack: err.stack, name: err.name });
+
+  res.status(500).json({
+    message: 'An unexpected error occurred. Please try again later.',
     ...(env.isProd ? {} : { stack: err.stack }),
   });
 });
