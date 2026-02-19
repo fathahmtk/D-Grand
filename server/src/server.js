@@ -19,9 +19,13 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 
+app.use((_req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
+
 app.use((err, _req, res, _next) => {
   console.error(err);
-  res.status(500).json({ message: 'Something went wrong' });
+  res.status(err.statusCode || 500).json({ message: err.message || 'Something went wrong' });
 });
 
 connectDb().then(() => {

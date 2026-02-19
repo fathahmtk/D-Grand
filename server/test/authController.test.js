@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { sendOtp } from '../src/controllers/authController.js';
+import { loginWithOtp, sendOtp } from '../src/controllers/authController.js';
 import { verifyOtp } from '../src/services/otpService.js';
 
 const createRes = () => {
@@ -41,4 +41,35 @@ test('sendOtp rejects requests without mobile', async () => {
 
   assert.equal(res.statusCode, 400);
   assert.deepEqual(res.body, { message: 'Mobile required' });
+});
+
+
+test('sendOtp rejects invalid mobile formats', async () => {
+  const req = { body: { mobile: '12345' } };
+  const res = createRes();
+
+  await sendOtp(req, res);
+
+  assert.equal(res.statusCode, 400);
+  assert.deepEqual(res.body, { message: 'Enter a valid 10-digit mobile number' });
+});
+
+test('loginWithOtp rejects missing otp', async () => {
+  const req = { body: { mobile: '9990001111' } };
+  const res = createRes();
+
+  await loginWithOtp(req, res);
+
+  assert.equal(res.statusCode, 400);
+  assert.deepEqual(res.body, { message: 'OTP required' });
+});
+
+test('loginWithOtp rejects invalid mobile formats', async () => {
+  const req = { body: { mobile: 'abc', otp: '123456' } };
+  const res = createRes();
+
+  await loginWithOtp(req, res);
+
+  assert.equal(res.statusCode, 400);
+  assert.deepEqual(res.body, { message: 'Enter a valid 10-digit mobile number' });
 });

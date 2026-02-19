@@ -3,6 +3,14 @@ import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import { razorpay } from '../config/razorpay.js';
 
+const ALLOWED_PAYMENT_METHODS = new Set(['UPI', 'Cards', 'Net Banking', 'Cash on Delivery']);
+
+const requiredShippingFields = ['fullName', 'phone', 'line1', 'city', 'state', 'pincode'];
+
+const isValidShippingAddress = (shippingAddress = {}) => {
+  return requiredShippingFields.every((field) => String(shippingAddress[field] || '').trim().length > 0);
+};
+
 export const createOrder = async (req, res) => {
   const { items, paymentMethod, shippingAddress } = req.body;
 
@@ -10,7 +18,15 @@ export const createOrder = async (req, res) => {
     return res.status(400).json({ message: 'At least one order item is required' });
   }
 
-  const requestedProductIds = items.map((item) => item.product);
+  if (!ALLOWED_PAYMENT_METHODS.has(paymentMethod)) {
+    return res.status(400).json({ message: 'Invalid payment method selected' });
+  }
+
+  if (!isValidShippingAddress(shippingAddress)) {
+    return res.status(400).json({ message: 'A complete shipping address is required' });
+  }
+
+  const requestedProductIds = [...new Set(items.map((item) => String(item.product)))];
   const products = await Product.find({ _id: { $in: requestedProductIds }, isActive: true }).select('_id price');
   const productById = new Map(products.map((product) => [String(product._id), product]));
 
@@ -24,7 +40,7 @@ export const createOrder = async (req, res) => {
     const product = productById.get(String(item.product));
     const quantity = Number(item.quantity);
 
-    if (!product || !Number.isInteger(quantity) || quantity <= 0) {
+    if (!product || !Number.isInteger(quantity) || quantity <= 0 || quantity > 10) {
       hasInvalidItem = true;
       return total;
     }
@@ -35,7 +51,7 @@ export const createOrder = async (req, res) => {
   }, 0);
 
   if (hasInvalidItem) {
-    return res.status(400).json({ message: 'One or more order items are invalid' });
+    return res.status(400).json({ message: 'One or more order items are invalid (allowed quantity: 1-10)' });
   }
 
   const gstAmount = Math.round(amount * 0.03);

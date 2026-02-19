@@ -11,7 +11,7 @@
           extend: {
             colors: {
               emerald: {
-                950: '#0F3B2E', // Brand Emerald (Deep luxury green)
+                950: '#0F3B2E',
                 900: '#134B3A',
                 800: '#175A46',
               },
@@ -19,22 +19,26 @@
                 200: '#F9EDB8',
                 300: '#F0D57A',
                 400: '#E6C665',
-                500: '#D4AF37', // Brand Gold
+                500: '#D4AF37',
                 600: '#B59024',
               },
               cream: {
-                50: '#FFFFFF', // Canvas White
+                50: '#FFFFFF',
                 100: '#FAFAFA',
                 200: '#F4F4F5',
               },
               teal: {
-                500: '#0d9488', // Electric Teal (Accent)
+                500: '#0d9488',
                 600: '#0f766e',
               }
             },
             fontFamily: {
-              display: ['"Space Grotesk"', 'sans-serif'], 
+              display: ['"Playfair Display"', 'serif'],
               sans: ['"Inter"', 'sans-serif'],
+            },
+            boxShadow: {
+              soft: '0 10px 30px rgba(15, 59, 46, 0.08)',
+              card: '0 14px 40px rgba(15, 59, 46, 0.10)',
             },
             animation: {
               'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
@@ -51,38 +55,74 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --radius-md: 14px;
+        --radius-lg: 20px;
+      }
+
       html {
         scroll-behavior: smooth;
       }
+
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #FFFFFF;
+        background: radial-gradient(circle at top left, #fffdf6, #ffffff 38%);
         color: #0F3B2E;
+        line-height: 1.6;
       }
+
       h1, h2, h3, h4, h5, h6, .font-display {
-        font-family: 'Space Grotesk', sans-serif;
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 0.01em;
       }
-      
+
+      .container {
+        max-width: 1240px;
+      }
+
+      .section-title {
+        font-size: clamp(1.75rem, 2.8vw, 3rem);
+        line-height: 1.15;
+      }
+
+      .section-subtitle {
+        font-size: clamp(0.75rem, 1vw, 0.85rem);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: #B59024;
+      }
+
+      a, button {
+        transition: all 220ms ease;
+      }
+
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: 2px solid #D4AF37;
+        outline-offset: 3px;
+      }
+
       .bg-texture {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         pointer-events: none;
         z-index: 50;
         opacity: 0.03;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       }
-      
+
       .scrollbar-hide::-webkit-scrollbar {
-          display: none;
+        display: none;
       }
+
       .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
     </style>
   <script type="importmap">

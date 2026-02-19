@@ -86,7 +86,7 @@ export const Layout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans text-emerald-950 relative selection:bg-gold-500 selection:text-white">
+    <div className="min-h-screen flex flex-col font-sans text-emerald-950 relative selection:bg-gold-500 selection:text-white tracking-[0.01em]">
       {/* Toast Notification */}
       <AnimatePresence>
         {notification && (
@@ -110,11 +110,11 @@ export const Layout: React.FC = () => {
       {/* Header */}
       <header 
         className={`fixed top-0 left-0 w-full z-[60] transition-all duration-300 ${
-          scrolled || !isHome ? 'bg-emerald-950/95 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-5'
+          scrolled || !isHome ? 'bg-emerald-950/95 backdrop-blur-md py-3 shadow-[0_8px_28px_rgba(15,59,46,0.28)]' : 'bg-transparent py-5'
         }`}
         onMouseLeave={() => setHoveredNav(null)}
       >
-        <div className="container mx-auto px-6 flex justify-between items-center">
+        <div className="container mx-auto px-5 sm:px-6 md:px-10 lg:px-12 flex justify-between items-center gap-6">
           
           <div className="flex-shrink-0 z-[60]">
              <NavLink to="/">
@@ -126,8 +126,8 @@ export const Layout: React.FC = () => {
              </NavLink>
           </div>
 
-          <div className="hidden md:flex items-center gap-8 ml-auto">
-            <nav className="flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-10 ml-auto">
+            <nav className="flex items-center gap-7">
               {NAV_ITEMS.map((item) => (
                 <div 
                   key={item.label} 
@@ -138,7 +138,7 @@ export const Layout: React.FC = () => {
                     to={item.path || '#'}
                     end={item.path === '/'}
                     className={({ isActive }) =>
-                      `flex items-center gap-1 text-[10px] tracking-[0.2em] uppercase font-bold transition-all duration-300 relative font-sans ${
+                      `flex items-center gap-1 text-[11px] tracking-[0.18em] uppercase font-semibold transition-all duration-300 relative font-sans ${
                         isActive 
                           ? 'text-gold-400' 
                           : 'text-white hover:text-gold-400'
