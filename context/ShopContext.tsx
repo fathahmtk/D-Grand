@@ -22,14 +22,21 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const parseStoredJson = <T,>(key: string, fallback: T): T => {
+    try {
+      const saved = localStorage.getItem(key);
+      return saved ? JSON.parse(saved) : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+
   const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('dgrand_cart');
-    return saved ? JSON.parse(saved) : [];
+    return parseStoredJson<CartItem[]>('dgrand_cart', []);
   });
   
   const [wishlist, setWishlist] = useState<string[]>(() => {
-    const saved = localStorage.getItem('dgrand_wishlist');
-    return saved ? JSON.parse(saved) : [];
+    return parseStoredJson<string[]>('dgrand_wishlist', []);
   });
 
   const [isCartOpen, setIsCartOpen] = useState(false);

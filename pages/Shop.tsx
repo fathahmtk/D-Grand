@@ -28,12 +28,12 @@ const Shop = () => {
   return (
     <div className="min-h-screen bg-cream-50 pt-24 md:pt-28 pb-16">
       <Seo title="Shop Fashion Jewellery" description="Explore premium fashion jewellery for Indian weddings, daily wear and gifting." />
-      <div className="container mx-auto px-3 md:px-6">
-        <div className="bg-white border border-gold-200 p-4 md:p-6 mb-6 md:mb-8 rounded-sm">
+      <div className="container mx-auto px-5 sm:px-6 md:px-10 lg:px-12">
+        <div className="bg-white border border-gold-200/80 p-4 md:p-6 mb-6 md:mb-8 rounded-xl shadow-soft">
           <div className="flex items-center justify-between mb-3 md:hidden">
             <h1 className="font-display text-2xl text-emerald-950">Shop</h1>
             <button
-              className="text-xs uppercase tracking-widest border px-3 py-2"
+              className="text-[11px] uppercase tracking-[0.18em] border border-emerald-950/20 rounded-md px-3 py-2 font-medium"
               onClick={() => setShowFilters((prev) => !prev)}
             >
               {showFilters ? 'Hide Filters' : 'Show Filters'}
@@ -41,28 +41,33 @@ const Shop = () => {
           </div>
 
           <div className={`${showFilters ? 'grid' : 'hidden'} md:grid gap-3 md:gap-4 md:grid-cols-4`}>
-            <input className="border px-3 py-2.5 text-sm" placeholder="Search products" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <select className="border px-3 py-2.5 text-sm" value={category} onChange={(e) => setCategory(e.target.value)}>
+            <input
+              className="border border-emerald-950/15 rounded-md px-3 py-2.5 text-sm focus:border-gold-500"
+              placeholder="Search products"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <select className="border border-emerald-950/15 rounded-md px-3 py-2.5 text-sm focus:border-gold-500" value={category} onChange={(e) => setCategory(e.target.value)}>
               <option value="All">All Categories</option>
               {CATEGORIES.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
             </select>
-            <select className="border px-3 py-2.5 text-sm" value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)}>
+            <select className="border border-emerald-950/15 rounded-md px-3 py-2.5 text-sm focus:border-gold-500" value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)}>
               <option value="latest">Latest</option>
               <option value="popular">Popular</option>
               <option value="low">Price: Low to High</option>
               <option value="high">Price: High to Low</option>
             </select>
             <div>
-              <label className="text-xs block mb-2">Max Price ₹{maxPrice.toLocaleString('en-IN')}</label>
-              <input className="w-full" type="range" min="500" max="6000" step="100" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
+              <label className="text-xs uppercase tracking-[0.14em] text-emerald-900/80 block mb-2">Max Price ₹{maxPrice.toLocaleString('en-IN')}</label>
+              <input className="w-full accent-gold-500" type="range" min="500" max="6000" step="100" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
             </div>
           </div>
         </div>
 
-        <p className="text-[10px] md:text-xs uppercase tracking-[0.18em] text-gray-500 mb-4">Fashion Jewellery – Not Real Gold</p>
-        <p className="text-xs text-gray-500 mb-5">Showing {filtered.length} products</p>
+        <p className="text-[10px] md:text-xs uppercase tracking-[0.18em] text-gray-500 mb-3">Fashion Jewellery – Not Real Gold</p>
+        <p className="text-sm text-emerald-900/70 mb-6">Showing {filtered.length} products</p>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {filtered.map((product) => <ProductCard key={product.id} product={product} />)}
         </div>
       </div>

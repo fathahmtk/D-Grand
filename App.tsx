@@ -19,6 +19,7 @@ import ShippingPolicy from './pages/ShippingPolicy';
 import ReturnPolicy from './pages/ReturnPolicy';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Admin from './pages/Admin';
+import NotFound from './pages/NotFound';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -53,6 +54,7 @@ const App: React.FC = () => {
             <Route path="return-policy" element={<ReturnPolicy />} />
             <Route path="privacy-policy" element={<PrivacyPolicy />} />
             <Route path="admin" element={<Admin />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </HashRouter>

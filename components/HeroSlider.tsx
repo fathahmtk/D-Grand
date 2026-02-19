@@ -37,7 +37,7 @@ export const HeroSlider: React.FC = () => {
         </motion.div>
       </AnimatePresence>
 
-      <div className="relative z-20 h-full container mx-auto px-6 flex flex-col items-center justify-center text-center">
+      <div className="relative z-20 h-full container mx-auto px-5 sm:px-6 md:px-10 lg:px-12 flex flex-col items-center justify-center text-center">
         <div className="max-w-5xl">
             <motion.div 
                 initial={{ y: 30, opacity: 0 }}
@@ -52,7 +52,7 @@ export const HeroSlider: React.FC = () => {
                      <div className="h-px w-8 md:w-16 bg-gold-500/50"></div>
                  </div>
                  
-                 <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-12 text-white tracking-tight drop-shadow-lg">
+                 <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-10 md:mb-12 text-white tracking-tight drop-shadow-lg">
                     Timeless Imitation <br/> <span className="text-gold-200">Jewellery Collection</span>
                  </h1>
                  
